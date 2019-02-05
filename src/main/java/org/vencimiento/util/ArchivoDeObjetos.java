@@ -1,4 +1,4 @@
-package vencimiento.poo;
+package org.vencimiento.util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -72,7 +72,7 @@ public class ArchivoDeObjetos {
         }
         return ven;
     }
-
+/*
     public static void main(String a[]){
 		
 		ArchivoDeObjetos ado = new ArchivoDeObjetos();
@@ -83,5 +83,5 @@ public class ArchivoDeObjetos {
 		ven.add(v2);
 		ado.guardarObjeto(ven);
 		ado.mostrarObjeto();
-    }
+    }*/
 }
