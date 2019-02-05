@@ -1,5 +1,4 @@
-import poo.*;
-
+import vencimiento.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -14,28 +13,43 @@ public class Vencimiento_GUI extends JFrame {
 		
 		cp.add( new JLabel("Vencimientos",SwingConstants.CENTER),BorderLayout.NORTH);
 
-		String[] columnNames = {"Tipo",
+
+		
+		final String[] COLUMN_NAMES = {"Tipo",
                                 "Fecha vto.",
                                 "Importe",
                                 "Estado"};
+        final int COLUMN_SIZE = COLUMN_NAMES.length;
+        
 
-        Object[][] data = {
-	    {"Kathy", "Smith",
-	     "Snowboarding", new Integer(5), new Boolean(false)},
-	    {"John", "Doe",
-	     "Rowing", new Integer(3), new Boolean(true)},
-	    {"Sue", "Black",
-	     "Knitting", new Integer(2), new Boolean(false)},
-	    {"Jane", "White",
-	     "Speed reading", new Integer(20), new Boolean(true)},
-	    {"Joe", "Brown",
-	     "Pool", new Integer(10), new Boolean(false)}
-        };
+        ArchivoDeObjetos ado = new ArchivoDeObjetos();
+        Object[][] data;
+
+        for (int i = 0; i< ado.leerVencimiento().size();i++) {
+        	for (int j = 0; j<COLUMN_SIZE; j++) {
+        		data[i][j] = ado.leerVencimiento().get(j);
+        	}
+        }
+        
+
+        // Fecha
+
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date today = new Date();
+		Date todayWithZeroTime = null;
+		try {
+			todayWithZeroTime = formatter.parse(formatter.format(today));
+		} catch (Exception e) {
+
+		}
+
+		// Tabla
 
 		
-		final JTable table = new JTable(data, columnNames);
+		final JTable table = new JTable(data, COLUMN_NAMES);
 		
-        	JScrollPane scrollPane = new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(table);
 		cp.add(scrollPane, BorderLayout.CENTER);
 		pack();
 		setSize(300,100);
