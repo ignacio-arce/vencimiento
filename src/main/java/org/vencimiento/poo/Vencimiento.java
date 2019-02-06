@@ -4,12 +4,16 @@ import java.util.*;
 import java.io.Serializable;
 
 public class Vencimiento implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Date fechaVencimiento;
 	private int monto;
 	private boolean pagado;
 	private String servicio;
 	
-	Vencimiento(Date fechaVencimiento, int monto, boolean pagado, String servicio) {
+	public Vencimiento(Date fechaVencimiento, int monto, boolean pagado, String servicio) {
 		this.fechaVencimiento = fechaVencimiento;
 		this.monto = monto;
 		this.pagado = pagado;

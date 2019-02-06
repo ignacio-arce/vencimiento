@@ -2,65 +2,80 @@ package org.vencimiento.launcher;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.*;
+
+import org.vencimiento.poo.Vencimiento;
+import org.vencimiento.util.ArchivoDeObjetos;
 
 public class Vencimiento_GUI extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	Vencimiento_GUI() {
-		
-		
+
 		Container cp = getContentPane();
 		cp.setLayout(new BorderLayout());
-		
-		cp.add( new JLabel("Vencimientos",SwingConstants.CENTER),BorderLayout.NORTH);
 
+		cp.add(new JLabel("Vencimientos", SwingConstants.CENTER), BorderLayout.NORTH);
 
-		
-		final String[] COLUMN_NAMES = {"Tipo",
-                                "Fecha vto.",
-                                "Importe",
-                                "Estado"};
-        final int COLUMN_SIZE = COLUMN_NAMES.length;
-        
+		final String[] COLUMN_NAMES = { "Servicio", "Fecha vto.", "Importe", "Estado" };
+		final int COLUMN_SIZE = COLUMN_NAMES.length;
 
-        ArchivoDeObjetos ado = new ArchivoDeObjetos();
-        Object[][] data;
+		// Fecha
 
-        for (int i = 0; i< ado.leerVencimiento().size();i++) {
-        	for (int j = 0; j<COLUMN_SIZE; j++) {
-        		data[i][j] = ado.leerVencimiento().get(j);
-        	}
-        }
-        
-
-        // Fecha
-
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		Date today = new Date();
-		Date todayWithZeroTime = null;
+		// Date todayWithZeroTime = null;
 		try {
-			todayWithZeroTime = formatter.parse(formatter.format(today));
+			Date todayWithZeroTime = formatter.parse(formatter.format(today));
+			/* Provisorio */
+
+			Vencimiento v1 = new Vencimiento(todayWithZeroTime, 2200, true, "Seguro del auto");
+			Vencimiento v2 = new Vencimiento(todayWithZeroTime, 2200, true, "Seguro del auto");
+			ArchivoDeObjetos.getVencimiento().add(v1);
+			ArchivoDeObjetos.getVencimiento().add(v2);
+
+			ArchivoDeObjetos.guardarVencimiento();
 		} catch (Exception e) {
 
 		}
 
-		// Tabla
+		// Cargar datos
 
 		
+		Object data[][] = new Object[30][COLUMN_SIZE];
+		for (int j = 0; j < ArchivoDeObjetos.getVencimiento().size(); j++) {
+			for (Vencimiento v : ArchivoDeObjetos.leerVencimiento()) {
+					data[j][0] = v.getServicio();
+					data[j][1] = v.getFechavencimiento();
+					data[j][2] = (Integer) v.getMonto();
+					data[j][3] = v.isPagado();
+			}
+		}
+
+		// Tabla
+
 		final JTable table = new JTable(data, COLUMN_NAMES);
-		
-        JScrollPane scrollPane = new JScrollPane(table);
+
+		JScrollPane scrollPane = new JScrollPane(table);
 		cp.add(scrollPane, BorderLayout.CENTER);
 		pack();
-		setSize(300,100);
+		setSize(300, 100);
 		setTitle("Vencimiento");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 
 	public static void main(String args[]) {
-		SwingUtilities.invokeLater( new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				new Vencimiento_GUI();

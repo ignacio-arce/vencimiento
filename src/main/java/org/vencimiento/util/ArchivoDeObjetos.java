@@ -10,25 +10,28 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.*;
+
+import org.vencimiento.poo.Vencimiento;
+
 import java.text.*;
  
 
 
 public class ArchivoDeObjetos {
-	private List<Vencimiento> vencimiento = new ArrayList<>();
+	private static List<Vencimiento> vencimiento = new ArrayList<>();
 
-	ArchivoDeObjetos() {
+	public ArchivoDeObjetos() {
 
 	}
 
-    public static void guardarVencimiento(List<Vencimiento> ven){
+    public static void guardarVencimiento(){
          
         OutputStream ops = null;
         ObjectOutputStream objOps = null;
         try {
             ops = new FileOutputStream("archivoVencimientos.txt");
             objOps = new ObjectOutputStream(ops);
-            objOps.writeObject(ven);
+            objOps.writeObject(vencimiento);
             objOps.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -84,4 +87,18 @@ public class ArchivoDeObjetos {
 		ado.guardarObjeto(ven);
 		ado.mostrarObjeto();
     }*/
+
+	/**
+	 * @return the vencimiento
+	 */
+	public static List<Vencimiento> getVencimiento() {
+		return vencimiento;
+	}
+
+	/**
+	 * @param vencimiento the vencimiento to set
+	 */
+	public static void setVencimiento(List<Vencimiento> vencimiento) {
+		ArchivoDeObjetos.vencimiento = vencimiento;
+	}
 }
