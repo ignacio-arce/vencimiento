@@ -10,17 +10,19 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.*;
+import java.text.*;
 
 import org.vencimiento.poo.Vencimiento;
 
-import java.text.*;
- 
+/**
+ * @author acerNacho
+ */
 
 
 public class ArchivoDeObjetos {
 	private static List<Vencimiento> vencimiento = new ArrayList<>();
 
-	public ArchivoDeObjetos() {
+	private ArchivoDeObjetos() {
 
 	}
 
@@ -53,7 +55,7 @@ public class ArchivoDeObjetos {
          
         InputStream fileIs = null;
         ObjectInputStream objIs = null;
-		List<Vencimiento> ven = null;
+	List<Vencimiento> ven = null;
         try {
             fileIs = new FileInputStream("archivoVencimientos.txt");
             objIs = new ObjectInputStream(fileIs);
@@ -75,18 +77,6 @@ public class ArchivoDeObjetos {
         }
         return ven;
     }
-/*
-    public static void main(String a[]){
-		
-		ArchivoDeObjetos ado = new ArchivoDeObjetos();
-		
-		Vencimiento v1 = new Vencimiento(todayWithZeroTime,2200,true,"Seguro del auto");
-		Vencimiento v2 = new Vencimiento(todayWithZeroTime,2200,true,"Seguro del auto");
-		ven.add(v1);
-		ven.add(v2);
-		ado.guardarObjeto(ven);
-		ado.mostrarObjeto();
-    }*/
 
 	/**
 	 * @return the vencimiento
