@@ -10,15 +10,19 @@ import javax.swing.*;
 
 import org.vencimiento.poo.Vencimiento;
 import org.vencimiento.util.ArchivoDeObjetos;
-
+/**
+* Class responsible for launching the Vencimiento System.
+* @author acerNacho
+* @version 0.1b
+*/
 public class Vencimiento_GUI extends JFrame {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
-
-	Vencimiento_GUI() {
+	/**
+	 * Initialise the JFrame containing the various JSwing components responsible of the Vencimiento System.
+	 */
+	public Vencimiento_GUI() {
 
 		Container cp = getContentPane();
 		cp.setLayout(new BorderLayout());
