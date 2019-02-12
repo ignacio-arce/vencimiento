@@ -1,4 +1,3 @@
-package org.vencimiento.util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,18 +11,21 @@ import java.io.Serializable;
 import java.util.*;
 import java.text.*;
 
-import org.vencimiento.poo.Vencimiento;
-
 /**
  * @author acerNacho
  */
 
 
-public class ArchivoDeObjetos {
-	private static List<Vencimiento> vencimiento = new ArrayList<>();
-
-	private ArchivoDeObjetos() {
-
+public class VencimientoController {
+	private List<VencimientoModel> vto_model;
+	private VencimientoView vto_view;
+	
+	
+	public VencimientoController(List<VencimientoModel> vto_model, VencimientoView vto_view) {
+		this.vto_model = vto_model;
+		this.vto_view = vto_view;
+		
+		//mostrarVencimiento();
 	}
 
     public static void guardarVencimiento(){
@@ -33,7 +35,7 @@ public class ArchivoDeObjetos {
         try {
             ops = new FileOutputStream("archivoVencimientos.txt");
             objOps = new ObjectOutputStream(ops);
-            objOps.writeObject(vencimiento);
+            objOps.writeObject(vto_model);
             objOps.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -48,14 +50,25 @@ public class ArchivoDeObjetos {
         }
          
     }
+	
+	public void mostrarVencimiento() {
+		for (int j = 0; j < vto_model.size(); j++) {
+			for (VencimientoModel v : vto_model) {
+				vto_view.data[j][0] = v.getServicio();
+				vto_view.data[j][1] = v.getFechavencimiento();
+				vto_view.data[j][2] = (Integer) v.getMonto();
+				vto_view.data[j][3] = v.isPagado();
+			}
+		}
+		vto_view.table.repaint();
+	}
 
-
-    
+    /*
     public static List<Vencimiento> leerVencimiento(){
          
         InputStream fileIs = null;
         ObjectInputStream objIs = null;
-	List<Vencimiento> ven = null;
+		List<Vencimiento> ven = null;
         try {
             fileIs = new FileInputStream("archivoVencimientos.txt");
             objIs = new ObjectInputStream(fileIs);
@@ -78,17 +91,16 @@ public class ArchivoDeObjetos {
         return ven;
     }
 
-	/**
-	 * @return the vencimiento
-	 */
+	
 	public static List<Vencimiento> getVencimiento() {
 		return vencimiento;
 	}
 
-	/**
+	
 	 * @param vencimiento the vencimiento to set
-	 */
+	 
 	public static void setVencimiento(List<Vencimiento> vencimiento) {
 		ArchivoDeObjetos.vencimiento = vencimiento;
-	}
+	}*/
+	
 }

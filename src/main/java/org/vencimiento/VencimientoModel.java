@@ -1,9 +1,8 @@
-package org.vencimiento.poo;
 
 import java.util.*;
 import java.io.Serializable;
 
-public class Vencimiento implements Serializable {
+public class VencimientoModel implements Serializable {
 	/**
 	 * 
 	 */
@@ -13,7 +12,11 @@ public class Vencimiento implements Serializable {
 	private boolean pagado;
 	private String servicio;
 	
-	public Vencimiento(Date fechaVencimiento, int monto, boolean pagado, String servicio) {
+	public VencimientoModel() {
+		
+	}
+	
+	public VencimientoModel(Date fechaVencimiento, int monto, boolean pagado, String servicio) {
 		this.fechaVencimiento = fechaVencimiento;
 		this.monto = monto;
 		this.pagado = pagado;
