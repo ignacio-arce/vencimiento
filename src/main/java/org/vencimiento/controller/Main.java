@@ -1,21 +1,21 @@
 package controller;
 
 import javax.swing.*;
-import java.util.*;
-
-import model.Vencimiento;
 import ui.View;
 import controller.Controller;
+import dao.VencimientoDao;
+import dao.VencimientoDaoImpl;
 
 public class Main {
 	public static void main(String args[]) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				List<Vencimiento> listaVencimientos = new ArrayList<Vencimiento>();
-				View view = new View(listaVencimientos);
+				VencimientoDao vencimientoDao = new VencimientoDaoImpl();
 				
-				Controller controller = new Controller(listaVencimientos,view);
+				View view = new View();
+				Controller controller = new Controller(vencimientoDao,view);
+				
 				view.setVisible(true);
 				controller.run();
 			}

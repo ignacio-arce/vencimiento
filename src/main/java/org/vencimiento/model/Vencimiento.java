@@ -1,15 +1,15 @@
 
 package model;
 
-import java.util.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Vencimiento implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Date fechaVencimiento;
+	private LocalDate fechaVencimiento;
 	private int monto;
 	private boolean pagado;
 	private String servicio;
@@ -18,18 +18,18 @@ public class Vencimiento implements Serializable {
 		
 	}
 	
-	public Vencimiento(Date fechaVencimiento, int monto, boolean pagado, String servicio) {
+	public Vencimiento(LocalDate fechaVencimiento, int monto, boolean pagado, String servicio) {
 		this.fechaVencimiento = fechaVencimiento;
 		this.monto = monto;
 		this.pagado = pagado;
 		this.servicio = servicio;
 	}
 	
-	public void setFechaVencimiento(Date fechaVencimiento) {
+	public void setFechaVencimiento(LocalDate fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 	
-	public Date getFechavencimiento() {
+	public LocalDate getFechavencimiento() {
 		return fechaVencimiento;
 	}
 

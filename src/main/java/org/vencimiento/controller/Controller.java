@@ -1,21 +1,11 @@
 package controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-
-/*import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.text.*;*/
-import java.util.*;
+import javax.swing.JOptionPane;
 
 import dao.VencimientoDao;
-import dao.VencimientoDaoImpl;
 import model.Vencimiento;
 import ui.View;
 
@@ -23,82 +13,82 @@ import ui.View;
  * @author acerNacho
  */
 
-
 public class Controller {
-	private static View vto_view;
-	private static VencimientoDao vencimientoDao;
-	
-	public Controller(List<Vencimiento> listaVencimientos, View vto_view) {
-		Controller.vto_view = vto_view;
-		vencimientoDao = new VencimientoDaoImpl(listaVencimientos);
+	private View view;
+	private VencimientoDao vencimientoDao;
+
+	protected Controller(VencimientoDao vencimientoDao, View view) {
+		this.view = view;
+		this.vencimientoDao = vencimientoDao;
 	}
-	
-	public void run() {
-		vencimientoDao.getListaVencimientos();
-		vto_view.cargarDatosEnTabla();
+
+	protected void run() {
+		view.agregarListeners(new MenuListener());
+		if (vencimientoDao.getListaVencimientos() != null) {
+			cargarDatosEnTabla();
+		}
 	}
-	
-	/*public static void guardarVencimiento() {
 
-		OutputStream ops = null;
-		ObjectOutputStream objOps = null;
-		try {
-			ops = new FileOutputStream("archivoVencimientos.txt");
-			objOps = new ObjectOutputStream(ops);
-			objOps.writeObject(vto_model);
-			objOps.flush();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (objOps != null)
-					objOps.close();
-			} catch (Exception ex) {
+	private class BotonCargarDatosListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
 
+			if (view.getFecha() != null) {
+				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getMonto(), false,
+						view.getTipo());
+				vencimientoDao.guardarVencimientos(vencimiento);
+				view.limpiarContenedor();
+				cargarDatosEnTabla();
+				view.crearPanelTabla();
+				view.repaint();
+				view.validate();
 			}
+
 		}
+	}
 
-	}*/
+	private class MenuListener implements ActionListener {
 
-	/*public void mostrarVencimiento() {
-		for (int j = 0; j < vto_model.size(); j++) {
-			for (Vencimiento v : vto_model) {
-				vto_view.getData()[j][0] = v.getServicio();
-				vto_view.getData()[j][1] = v.getFechavencimiento();
-				vto_view.getData()[j][2] = (Integer) v.getMonto();
-				vto_view.getData()[j][3] = v.isPagado();
-			}
-		}
-		vto_view.getTable().repaint();
-	}*/
-	/*
-	public static List<Vencimiento> getListaVencimientos() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			switch (e.getActionCommand()) {
+			case "Agregar":
+				view.limpiarContenedor();
+				view.crearPanelAgregarVencimiento();
+				view.agregerListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
+				break;
+			case "Quitar":
+				if (JOptionPane.showConfirmDialog(view, "Confirmacion",
+						"Desea borrar el item seleccionado?", 0) == 0) { // Si
+					vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));
+					view.limpiarContenedor();
+					view.crearPanelTabla();
 
-		InputStream fileIs = null;
-		ObjectInputStream objIs = null;
-		List<Vencimiento> ven = null;
-		try {
-			fileIs = new FileInputStream("archivoVencimientos.txt");
-			objIs = new ObjectInputStream(fileIs);
-			ven = (ArrayList<Vencimiento>) objIs.readObject();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (objIs != null) {
-					objIs.close();
+					view.clearData();
+					cargarDatosEnTabla();
+					view.repaint();
+					view.revalidate();
 				}
-			} catch (Exception ex) {
-
+				break;
+				default:
+					break;
 			}
 		}
-		return ven;
-	}*/
+		
+	}
+	
+	/*
+	 * Carga los datos a la tabla
+	 */
+	public void cargarDatosEnTabla() {
+		int j = 0;
+		for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
+			view.getData()[j][0] = v.getServicio();
+			view.getData()[j][1] = v.getFechavencimiento();
+			view.getData()[j][2] = (Integer) v.getMonto();
+			view.getData()[j][3] = v.isPagado();
+			j++;
+		}
+	}
 
 }
