@@ -32,7 +32,6 @@ public class Controller {
 	private class BotonCargarDatosListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			if (view.getFecha() != null) {
 				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getMonto(), false,
 						view.getTipo());
@@ -61,11 +60,10 @@ public class Controller {
 				if (JOptionPane.showConfirmDialog(view, "Confirmacion",
 						"Desea borrar el item seleccionado?", 0) == 0) { // Si
 					vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));
-					view.limpiarContenedor();
-					view.crearPanelTabla();
-
 					view.clearData();
 					cargarDatosEnTabla();
+					view.limpiarContenedor();
+					view.crearPanelTabla();
 					view.repaint();
 					view.revalidate();
 				}

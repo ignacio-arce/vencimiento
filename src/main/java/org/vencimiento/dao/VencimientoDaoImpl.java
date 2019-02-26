@@ -8,16 +8,17 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Vencimiento;
 
 public class VencimientoDaoImpl implements VencimientoDao {
 
-	private List<Vencimiento> vencimiento;
+	private List<Vencimiento> listaVencimientos;
 
 	public VencimientoDaoImpl() {
-		vencimiento = (vencimiento.isEmpty()) ? getListaVencimientos() : vencimiento;
+		this.listaVencimientos = (listaVencimientos == null && archivo.exists()) ? getListaVencimientos() : listaVencimientos;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -29,9 +30,9 @@ public class VencimientoDaoImpl implements VencimientoDao {
 		try {
 			fileIs = new FileInputStream(archivo);
 			objIs = new ObjectInputStream(fileIs);
-			ven = (List<Vencimiento>) objIs.readObject();
+			ven = (ArrayList<Vencimiento>) objIs.readObject();
 		} catch (FileNotFoundException e) {
- 			e.printStackTrace();
+			System.err.println("No existe el archivo");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -51,18 +52,18 @@ public class VencimientoDaoImpl implements VencimientoDao {
 
 	@Override
 	public Vencimiento getVencimiento(int n) {
-		return null;
+		return listaVencimientos.get(n);
 	}
 
 	@Override
 	public void guardarVencimientos(Vencimiento vencimiento) {
-
+		listaVencimientos.add(vencimiento);
 		OutputStream ops = null;
 		ObjectOutputStream objOps = null;
 		try {
 			ops = new FileOutputStream(archivo);
 			objOps = new ObjectOutputStream(ops);
-			objOps.writeObject(vencimiento);
+			objOps.writeObject(listaVencimientos);
 			objOps.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -79,8 +80,27 @@ public class VencimientoDaoImpl implements VencimientoDao {
 	}
 
 	@Override
-	public void borrarVencimiento(Vencimiento Vencimiento) {
-		
+	public void borrarVencimiento(Vencimiento vencimiento) {
+		listaVencimientos.remove(vencimiento);
+		OutputStream ops = null;
+		ObjectOutputStream objOps = null;
+		try {
+			ops = new FileOutputStream(archivo);
+			objOps = new ObjectOutputStream(ops);
+			objOps.writeObject(listaVencimientos);
+			objOps.flush();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (objOps != null)
+					objOps.close();
+			} catch (Exception ex) {
+
+			}
+		}
 	}
 
 }
