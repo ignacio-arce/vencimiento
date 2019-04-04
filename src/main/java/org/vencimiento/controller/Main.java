@@ -1,10 +1,10 @@
 package controller;
 
-import javax.swing.*;
-import ui.View;
-import controller.Controller;
+import javax.swing.SwingUtilities;
+
 import dao.VencimientoDao;
 import dao.VencimientoDaoImpl;
+import ui.View;
 
 public class Main {
 	public static void main(String args[]) {

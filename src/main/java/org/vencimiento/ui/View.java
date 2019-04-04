@@ -1,12 +1,27 @@
 package ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
 
@@ -65,9 +80,14 @@ public class View extends JFrame {
 
 		cp.add(menu, BorderLayout.NORTH);
 
-		// Tabla
+		/*
+		 *  Create JTable && Scrollpane
+		 */
 		table = new JTable(getData(), COLUMN_NAMES);
+		table.setSelectionMode(0);
 		scrollPane = new JScrollPane(table);
+		
+		
 
 		cp.add(scrollPane, BorderLayout.CENTER);
 	}
