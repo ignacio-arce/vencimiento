@@ -14,7 +14,7 @@ import java.util.List;
 
 import model.Vencimiento;
 /**
-* Manage the data of object vencimiento writing all the data in one file
+* Manage the data of object vencimiento writing all the data into a file
 */
 public class VencimientoDaoImpl implements VencimientoDao {
 
