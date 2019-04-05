@@ -6,6 +6,11 @@ import dao.VencimientoDao;
 import dao.VencimientoDaoImpl;
 import ui.View;
 
+/**
+ * Main method for creation of MVC 
+ * create model of vencimiento, controller and then run the controller
+ */
+
 public class Main {
 	public static void main(String args[]) {
 		SwingUtilities.invokeLater(new Runnable() {
