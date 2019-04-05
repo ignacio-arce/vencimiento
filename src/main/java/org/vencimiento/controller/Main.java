@@ -9,6 +9,8 @@ import ui.View;
 /**
  * Main method for creation of MVC 
  * create model of vencimiento, controller and then run the controller
+ * @author acerNacho
+ * @version 1.0
  */
 
 public class Main {
