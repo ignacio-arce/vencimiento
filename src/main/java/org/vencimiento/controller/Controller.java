@@ -23,6 +23,9 @@ public class Controller {
 	
 	/**
 	* Constructor of controller object
+	* created with the dao model and view
+	* @param vencimientoDao The model of dao
+	* @param view The frame of the app
 	*/
 	protected Controller(VencimientoDao vencimientoDao, View view) {
 		this.view = view;
