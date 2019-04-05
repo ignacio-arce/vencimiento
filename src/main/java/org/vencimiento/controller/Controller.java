@@ -10,10 +10,14 @@ import model.Vencimiento;
 import ui.View;
 
 /**
- * @author acerNacho
+ * Represents the controller of MVC
+ * with the corresponding actionListeners
  */
 
 public class Controller {
+	/**
+	* The view and the model of mvc
+	*/
 	private View view;
 	private VencimientoDao vencimientoDao;
 
@@ -76,7 +80,7 @@ public class Controller {
 	}
 	
 	/*
-	 * Carga los datos a la tabla
+	 * Load data on JTable
 	 */
 	public void cargarDatosEnTabla() {
 		int j = 0;
