@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Vencimiento;
-
+/**
+* Manage the data of object vencimiento writing all the data in one file
+*/
 public class VencimientoDaoImpl implements VencimientoDao {
 
 	private List<Vencimiento> listaVencimientos;
