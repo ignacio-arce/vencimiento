@@ -20,12 +20,19 @@ public class Controller {
 	*/
 	private View view;
 	private VencimientoDao vencimientoDao;
-
+	
+	/**
+	* Constructor of controller object
+	*/
 	protected Controller(VencimientoDao vencimientoDao, View view) {
 		this.view = view;
 		this.vencimientoDao = vencimientoDao;
 	}
-
+	
+	/**
+	* Run the controller, adds the listeners and load the data of dao 
+	* in the JTable
+	*/
 	protected void run() {
 		view.agregarListeners(new MenuListener());
 		if (vencimientoDao.getListaVencimientos() != null) {
@@ -79,7 +86,7 @@ public class Controller {
 		
 	}
 	
-	/*
+	/**
 	 * Load data on JTable
 	 */
 	public void cargarDatosEnTabla() {
