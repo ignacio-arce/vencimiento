@@ -33,8 +33,7 @@ public class Controller {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (view.getFecha() != null) {
-				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getMonto(), false,
-						view.getTipo());
+				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 				vencimientoDao.guardarVencimientos(vencimiento);
 				view.limpiarContenedor();
 				cargarDatosEnTabla();
@@ -81,10 +80,9 @@ public class Controller {
 	public void cargarDatosEnTabla() {
 		int j = 0;
 		for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
-			view.getData()[j][0] = v.getServicio();
-			view.getData()[j][1] = v.getFechavencimiento();
-			view.getData()[j][2] = (Integer) v.getMonto();
-			view.getData()[j][3] = v.isPagado();
+			view.getData()[j][0] = v.getTipo();
+			view.getData()[j][1] = v.getFechaVencimiento();
+			view.getData()[j][2] = v.getLote();
 			j++;
 		}
 	}

@@ -51,7 +51,7 @@ public class View extends JFrame {
 	private JTextField dia;
 	private JTextField mes;
 	private JTextField anio;
-	private JFormattedTextField monto;
+	private JTextField lote;
 	private JTextField tipo;
 	private JButton botonCargar;
 
@@ -87,8 +87,6 @@ public class View extends JFrame {
 		table.setSelectionMode(0);
 		scrollPane = new JScrollPane(table);
 		
-		
-
 		cp.add(scrollPane, BorderLayout.CENTER);
 	}
 
@@ -116,22 +114,11 @@ public class View extends JFrame {
 		panel.add(new JLabel("Fecha:", SwingConstants.RIGHT));
 		panel.add(panelFecha);
 
-		panel.add(new JLabel("Monto:", SwingConstants.RIGHT));
+		panel.add(new JLabel("Lote:", SwingConstants.RIGHT));
 
-		NumberFormat intFormat = NumberFormat.getIntegerInstance();
+		lote = new JTextField(8);
 
-		NumberFormatter numberFormatter = new NumberFormatter(intFormat);
-		numberFormatter.setValueClass(Long.class); // optional, ensures
-								// you will
-								// always get a
-								// long value
-		numberFormatter.setAllowsInvalid(false); // this is the key!!
-		numberFormatter.setMinimum(0l); // Optional
-
-		monto = new JFormattedTextField(numberFormatter);
-		monto.setBounds(0, 0, 8, getBounds().height);
-
-		panel.add(monto);
+		panel.add(lote);
 
 		panel.add(new JLabel("Tipo:", SwingConstants.RIGHT));
 		tipo = new JTextField(8);
@@ -161,7 +148,6 @@ public class View extends JFrame {
 	}
 
 	public String getTipo() {
-		// TODO Auto-generated method stub
 		return tipo.getText();
 	}
 
@@ -173,11 +159,6 @@ public class View extends JFrame {
 		return data;
 	}
 	
-	public void clearData() {
-		this.data = new Object[CELL_SIZE][COLUMN_SIZE];
-	}
-
-
 	public LocalDate getFecha() {
 		try {
 			int fecha[] = new int[3];
@@ -201,15 +182,13 @@ public class View extends JFrame {
 		}
 		return null;
 	}
-
-	public int getMonto() {
-		try {
-			return Integer.valueOf(monto.getText().replace(".", ""));
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		}
-
-		return 0;
+	
+	public String getLote() {
+		return lote.getText();
+	}
+	
+	public void clearData() {
+		this.data = new Object[CELL_SIZE][COLUMN_SIZE];
 	}
 
 }
