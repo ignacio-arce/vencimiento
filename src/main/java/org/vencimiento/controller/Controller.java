@@ -59,6 +59,7 @@ public class Controller {
 				if (JOptionPane.showConfirmDialog(view, "Confirmacion",
 						"Desea borrar el item seleccionado?", 0) == 0) { // Si
 					vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));
+					
 					view.clearData();
 					cargarDatosEnTabla();
 					view.limpiarContenedor();

@@ -6,12 +6,13 @@ import java.time.LocalDate;
 
 public class Vencimiento implements Serializable {
 	/**
-	 * 
+	 *  
 	 */
 	private static final long serialVersionUID = 1L;
 	private LocalDate fechaVencimiento;
 	private String tipo;
 	private String lote;
+	private int id;
 	
 	public Vencimiento() {
 		
@@ -22,6 +23,21 @@ public class Vencimiento implements Serializable {
 		this.tipo = tipo;
 		this.lote = lote;
 	}
+	
+	public Vencimiento(LocalDate fechaVencimiento, String tipo, String lote, int id) {
+		this.fechaVencimiento = fechaVencimiento;
+		this.tipo = tipo;
+		this.lote = lote;
+		this.id = id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+}
 	
 	public String getTipo() {
 		return tipo;
