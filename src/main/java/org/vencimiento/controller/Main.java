@@ -15,7 +15,6 @@ public class Main {
 				
 				View view = new View();
 				Controller controller = new Controller(vencimientoDao,view);
-				
 				view.setVisible(true);
 				controller.run();
 			}

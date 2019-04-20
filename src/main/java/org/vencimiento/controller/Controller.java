@@ -2,8 +2,12 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import dao.VencimientoDao;
 import model.Vencimiento;
@@ -32,17 +36,35 @@ public class Controller {
 	private class BotonCargarDatosListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (view.getFecha() != null) {
-				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
-				vencimientoDao.guardarVencimientos(vencimiento);
-				view.limpiarContenedor();
-				cargarDatosEnTabla();
-				view.crearPanelTabla();
-				view.repaint();
-				view.validate();
+			if (e.getSource().getClass() == JButton.class) {
+				if (view.getFecha() != null) {
+					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
+					vencimientoDao.guardarVencimientos(vencimiento);
+					view.limpiarContenedor();
+					cargarDatosEnTabla();
+					view.crearPanelTabla();
+					view.repaint();
+					view.validate();
+				}
 			}
-
 		}
+	}
+	
+	private class TextoFechaListener implements FocusListener {
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			String texto = ((JTextField) e.getSource()).getText();
+			if (texto.equals("DD") || texto.equals("MM") || texto.equals("YYYY")) {
+				((JTextField) e.getSource()).setText("");
+			}
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			
+		}
+
 	}
 
 	private class MenuListener implements ActionListener {
@@ -53,7 +75,8 @@ public class Controller {
 			case "Agregar":
 				view.limpiarContenedor();
 				view.crearPanelAgregarVencimiento();
-				view.agregerListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
+				view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
+				view.agregarListenersTextoFecha(new TextoFechaListener());
 				break;
 			case "Quitar":
 				if (JOptionPane.showConfirmDialog(view, "Confirmacion",

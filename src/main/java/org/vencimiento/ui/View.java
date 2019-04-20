@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
@@ -93,10 +94,10 @@ public class View extends JFrame {
 		JPanel panel = new JPanel();
 		JPanel panelFecha = new JPanel();
 
-		panel.setLayout(new GridLayout(4, 2, 15, 9));
+		panel.setLayout(new GridLayout(4, 2, 5, 9));
 		panelFecha.setLayout(new FlowLayout(FlowLayout.LEADING, 1, 0));
 
-		cp.setLayout(new FlowLayout(FlowLayout.LEADING, 40, 15));
+		cp.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 15));
 
 		dia = new JTextField("DD", 3);
 		mes = new JTextField("MM", 3);
@@ -118,7 +119,7 @@ public class View extends JFrame {
 		panel.add(lote);
 
 		panel.add(new JLabel("Tipo:", SwingConstants.RIGHT));
-		tipo = new JTextField(8);
+		tipo = new JTextField(10);
 		panel.add(tipo);
 
 		panel.add(new JPanel());
@@ -133,8 +134,15 @@ public class View extends JFrame {
 	public void limpiarContenedor() {
 		cp.removeAll();
 	}
+	
+	public void agregarListenersTextoFecha(FocusListener action) {
+		dia.addFocusListener(action);
+		mes.addFocusListener(action);
+		anio.addFocusListener(action);
+	}
 
-	public void agregerListenersPanelAgregarVencimiento(ActionListener action) {
+	public void agregarListenersPanelAgregarVencimiento(ActionListener action) {
+		
 		botonCargar.addActionListener(action);
 	}
 
