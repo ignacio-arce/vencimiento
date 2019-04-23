@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -32,14 +33,13 @@ import javax.swing.SwingConstants;
 public class View extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private final String[] COLUMN_NAMES = { "Servicio", "Fecha vto.", "Importe", "Estado" };
-	private final int COLUMN_SIZE = COLUMN_NAMES.length;
-	private int CELL_SIZE = 10;
+	private final String[] COLUMN_NAMES = { "Insumo", "Fecha vto.", "Lote", "Estado" };
 
-	private Object data[][] = new Object[CELL_SIZE][COLUMN_SIZE];
-
+	
+	private DefaultTableModel tableModel;
 	private JTable table;
 	private JScrollPane scrollPane;
+	
 	private final JMenuBar menu = new JMenuBar();
 	private final JMenu menuOpciones = new JMenu("Opciones");
 	private final JMenu menuAcercaDe = new JMenu("Acerca de");;
@@ -58,38 +58,41 @@ public class View extends JFrame {
 	 * responsible of the Vencimiento System.
 	 */
 	public View() {
+		crearTabla();
 		crearPanelTabla();
-
+		
 		pack();
 		setSize(400, 200);
 		setTitle("Vencimiento");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	
+	private void crearTabla() {
+		tableModel = new DefaultTableModel(COLUMN_NAMES,0);
+		table = new JTable(tableModel);
+		table.setSelectionMode(0);
+	}
 
 	public void crearPanelTabla() {
+		cp.removeAll();
 		cp.setLayout(new BorderLayout());
 
 		menuOpciones.add(menuOpcionesAgregar);
 		menuOpciones.add(menuOpcionesQuitar);
 		menu.add(menuOpciones);
 		menu.add(menuAcercaDe);
-
 		cp.add(menu, BorderLayout.NORTH);
 
 		/*
-		 *  Create JTable && Scrollpane
+		 *  Create scrollPane
 		 */
-		table = new JTable(getData(), COLUMN_NAMES);
-		table.setSelectionMode(0);
-		scrollPane = new JScrollPane(table);
 		
+		scrollPane = new JScrollPane(table);
 		cp.add(scrollPane, BorderLayout.CENTER);
 	}
 
 	public void crearPanelAgregarVencimiento() {
-		limpiarContenedor();
+		cp.removeAll();
 
 		JPanel panel = new JPanel();
 		JPanel panelFecha = new JPanel();
@@ -131,9 +134,6 @@ public class View extends JFrame {
 		cp.repaint();
 	}
 
-	public void limpiarContenedor() {
-		cp.removeAll();
-	}
 	
 	public void agregarListenersTextoFecha(FocusListener action) {
 		dia.addFocusListener(action);
@@ -152,6 +152,11 @@ public class View extends JFrame {
 		menuOpcionesQuitar.addActionListener(action);
 	}
 
+	/*
+	 * Getters & Setters
+	 * 
+	 * */
+	
 	public String getTipo() {
 		return tipo.getText();
 	}
@@ -160,8 +165,8 @@ public class View extends JFrame {
 		return table;
 	}
 
-	public Object[][] getData() {
-		return data;
+	public DefaultTableModel getTableModel() {
+		return tableModel;
 	}
 	
 	public LocalDate getFecha() {
@@ -192,8 +197,5 @@ public class View extends JFrame {
 		return lote.getText();
 	}
 	
-	public void clearData() {
-		this.data = new Object[CELL_SIZE][COLUMN_SIZE];
-	}
 
 }

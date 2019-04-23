@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -40,7 +41,6 @@ public class Controller {
 				if (view.getFecha() != null) {
 					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 					vencimientoDao.guardarVencimientos(vencimiento);
-					view.limpiarContenedor();
 					cargarDatosEnTabla();
 					view.crearPanelTabla();
 					view.repaint();
@@ -73,7 +73,6 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			switch (e.getActionCommand()) {
 			case "Agregar":
-				view.limpiarContenedor();
 				view.crearPanelAgregarVencimiento();
 				view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 				view.agregarListenersTextoFecha(new TextoFechaListener());
@@ -83,11 +82,9 @@ public class Controller {
 						"Desea borrar el item seleccionado?", 0) == 0) { // Si
 					vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));
 					
-					view.clearData();
 					cargarDatosEnTabla();
-					view.limpiarContenedor();
 					view.crearPanelTabla();
-					view.repaint();
+					/*view.repaint();*/
 					view.revalidate();
 				}
 				break;
@@ -102,13 +99,20 @@ public class Controller {
 	 * Carga los datos a la tabla
 	 */
 	public void cargarDatosEnTabla() {
-		int j = 0;
+		view.getTableModel().setRowCount(0);
 		for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
-			view.getData()[j][0] = v.getTipo();
-			view.getData()[j][1] = v.getFechaVencimiento();
-			view.getData()[j][2] = v.getLote();
-			j++;
+			Object data[] = { v.getTipo(), v.getFechaVencimiento() , v.getLote() , isExpired(v.getFechaVencimiento()) };
+			view.getTableModel().addRow(data);
 		}
+	}
+
+	private String isExpired(LocalDate fechaVencimiento) {
+		if (fechaVencimiento.isBefore(LocalDate.now())) {
+			return "Vencido";
+		} else {
+			return "En fecha";
+		}
+		
 	}
 
 }
