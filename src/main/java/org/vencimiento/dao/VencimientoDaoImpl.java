@@ -12,8 +12,8 @@ public class VencimientoDaoImpl implements VencimientoDao {
 	private List<Vencimiento> listaVencimientos;
 	private Connection c = null;
 	private Statement stmt = null;
-	public static final String DRIVER = "org.sqlite.JDBC";
-	public static final String DBURL = "jdbc:sqlite:data.db";
+	private static final String DRIVER = "org.sqlite.JDBC";
+	private static final String DBURL = "jdbc:sqlite:data.db";
 
 	public VencimientoDaoImpl() {
 		this.listaVencimientos = getListaVencimientos();

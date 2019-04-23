@@ -29,9 +29,7 @@ public class Controller {
 
 	protected void run() {
 		view.agregarListeners(new MenuListener());
-		if (vencimientoDao.getListaVencimientos() != null) {
-			cargarDatosEnTabla();
-		}
+		cargarDatosEnTabla();
 	}
 
 	private class BotonCargarDatosListener implements ActionListener {
