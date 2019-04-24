@@ -58,77 +58,75 @@ public class View extends JFrame {
 	 * responsible of the Vencimiento System.
 	 */
 	public View() {
-		crearTabla();
-		crearPanelTabla();
 		
-		pack();
-		setSize(400, 200);
-		setTitle("Vencimiento");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-
-	private void crearTabla() {
+		// Tabla & Modelo de tabla
 		tableModel = new DefaultTableModel(COLUMN_NAMES,0);
 		table = new JTable(tableModel);
 		table.setSelectionMode(0);
+		showPanelTabla();
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Vencimiento");
+		setLocationRelativeTo(null);
+		setSize(400, 200);
 	}
 
-	public void crearPanelTabla() {
+
+	public void showPanelTabla() {
 		cp.removeAll();
 		cp.setLayout(new BorderLayout());
 
+		// Menu de Opciones
 		menuOpciones.add(menuOpcionesAgregar);
 		menuOpciones.add(menuOpcionesQuitar);
 		menu.add(menuOpciones);
 		menu.add(menuAcercaDe);
 		cp.add(menu, BorderLayout.NORTH);
 
-		/*
-		 *  Create scrollPane
-		 */
-		
+		// ScrollPane
 		scrollPane = new JScrollPane(table);
 		cp.add(scrollPane, BorderLayout.CENTER);
 	}
 
-	public void crearPanelAgregarVencimiento() {
+	public void showPanelAgregarVencimiento() {
 		cp.removeAll();
-
-		JPanel panel = new JPanel();
-		JPanel panelFecha = new JPanel();
-
-		panel.setLayout(new GridLayout(4, 2, 5, 9));
-		panelFecha.setLayout(new FlowLayout(FlowLayout.LEADING, 1, 0));
-
 		cp.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 15));
-
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(4, 2, 5, 9));
+		
+		
+		// Panel Fecha
+		JPanel panelFecha = new JPanel();
+		panel.add(new JLabel("Fecha:", SwingConstants.RIGHT));
+		panelFecha.setLayout(new FlowLayout(FlowLayout.LEADING, 1, 0));
 		dia = new JTextField("DD", 3);
-		mes = new JTextField("MM", 3);
-		anio = new JTextField("YYYY", 3);
-
 		panelFecha.add(dia);
 		panelFecha.add(new JLabel("-"));
+		mes = new JTextField("MM", 3);
 		panelFecha.add(mes);
 		panelFecha.add(new JLabel("-"));
+		anio = new JTextField("YYYY", 3);
 		panelFecha.add(anio);
-
-		panel.add(new JLabel("Fecha:", SwingConstants.RIGHT));
 		panel.add(panelFecha);
-
+		
+		// TextField Lote
 		panel.add(new JLabel("Lote:", SwingConstants.RIGHT));
-
 		lote = new JTextField(8);
-
 		panel.add(lote);
-
+		
+		// TextField Tipo
 		panel.add(new JLabel("Tipo:", SwingConstants.RIGHT));
 		tipo = new JTextField(10);
 		panel.add(tipo);
 
+		// Panel vacio
 		panel.add(new JPanel());
+		
+		// Boton cargar datos
 		botonCargar = new JButton("Cargar datos");
-
 		panel.add(botonCargar);
+		
 		cp.add(panel);
 		cp.validate();
 		cp.repaint();
@@ -142,7 +140,6 @@ public class View extends JFrame {
 	}
 
 	public void agregarListenersPanelAgregarVencimiento(ActionListener action) {
-		
 		botonCargar.addActionListener(action);
 	}
 

@@ -65,6 +65,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 
 	@Override
 	public Vencimiento getVencimiento(int n) {
+		
 		return listaVencimientos.get(n);
 	}
 

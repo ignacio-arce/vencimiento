@@ -40,7 +40,7 @@ public class Controller {
 					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 					vencimientoDao.guardarVencimientos(vencimiento);
 					cargarDatosEnTabla();
-					view.crearPanelTabla();
+					view.showPanelTabla();
 					view.repaint();
 					view.validate();
 				}
@@ -71,19 +71,23 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			switch (e.getActionCommand()) {
 			case "Agregar":
-				view.crearPanelAgregarVencimiento();
+				view.showPanelAgregarVencimiento();
 				view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 				view.agregarListenersTextoFecha(new TextoFechaListener());
 				break;
 			case "Quitar":
-				if (JOptionPane.showConfirmDialog(view, "Confirmacion",
-						"Desea borrar el item seleccionado?", 0) == 0) { // Si
-					vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));
-					
-					cargarDatosEnTabla();
-					view.crearPanelTabla();
-					/*view.repaint();*/
-					view.revalidate();
+				if (view.getTable().getSelectedRow() > 0) {
+					if (JOptionPane.showConfirmDialog(view, "Confirmacion",
+							"Desea borrar el item seleccionado?", 0) == 0) { // Si
+						vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));
+						
+						cargarDatosEnTabla();
+						view.showPanelTabla();
+						/*view.repaint();*/
+						view.revalidate();
+					}
+				} else {
+					JOptionPane.showMessageDialog(view, "No se han seleccionado items", "Error", 0);
 				}
 				break;
 				default:
@@ -96,6 +100,7 @@ public class Controller {
 	/*
 	 * Carga los datos a la tabla
 	 */
+	
 	public void cargarDatosEnTabla() {
 		view.getTableModel().setRowCount(0);
 		for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
@@ -104,6 +109,11 @@ public class Controller {
 		}
 	}
 
+	
+	/**
+	 * Controla si los items estan vencidos
+	 */
+	
 	private String isExpired(LocalDate fechaVencimiento) {
 		if (fechaVencimiento.isBefore(LocalDate.now())) {
 			return "Vencido";
