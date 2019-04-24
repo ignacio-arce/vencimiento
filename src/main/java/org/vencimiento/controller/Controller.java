@@ -76,7 +76,7 @@ public class Controller {
 				view.agregarListenersTextoFecha(new TextoFechaListener());
 				break;
 			case "Quitar":
-				if (view.getTable().getSelectedRow() > 0) {
+				if (view.getTable().getSelectedRow() > -1) {
 					if (JOptionPane.showConfirmDialog(view, "Confirmacion",
 							"Desea borrar el item seleccionado?", 0) == 0) { // Si
 						vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));

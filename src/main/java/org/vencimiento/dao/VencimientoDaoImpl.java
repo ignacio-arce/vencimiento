@@ -16,7 +16,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 	private static final String DBURL = "jdbc:sqlite:data.db";
 
 	public VencimientoDaoImpl() {
-		this.listaVencimientos = getListaVencimientos();
+		
 	}
 	
 	private int[] toInteger(String cadenas[]) {
@@ -36,25 +36,25 @@ public class VencimientoDaoImpl implements VencimientoDao {
 		try {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
-			
 			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
-			
-			List<Vencimiento> lista = new ArrayList<Vencimiento>();
+			System.out.println("DB opened");
 			stmt = c.createStatement();
+			
 			ResultSet rs = stmt.executeQuery("SELECT * FROM VENCIMIENTO;");
-
+			
+			listaVencimientos = new ArrayList<Vencimiento>();
 			while (rs.next()) {
 				int fecha[] = toInteger(rs.getString("Fecha").split("-"));
 				String tipo = rs.getString("Tipo");
 				String lote = rs.getString("Lote");
 				int id = rs.getInt("ID");
-				lista.add(new Vencimiento(LocalDate.of(fecha[0],fecha[1],fecha[2]), tipo, lote, id));
+				listaVencimientos.add(new Vencimiento(LocalDate.of(fecha[0],fecha[1],fecha[2]), tipo, lote, id));
 			}
+			
 			rs.close();
 			stmt.close();
 			c.close();
-			return lista;
+			return listaVencimientos;
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -75,8 +75,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
-
+			System.out.println("DB opened");
 			stmt = c.createStatement();
 			
 			String sql = "INSERT INTO VENCIMIENTO (Fecha,Tipo,Lote) " + "VALUES ( '" + ven.getFechaVencimiento()
@@ -84,7 +83,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			stmt.executeUpdate(sql);
 			ResultSet rs = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='VENCIMIENTO';");
 			ven.setId(rs.getInt("seq"));
-			System.out.println(rs.getInt("seq"));
 			rs.close();
 			stmt.close();
 			c.commit();
@@ -103,9 +101,9 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
-
+			System.out.println("DB opened");
 			stmt = c.createStatement();
+			
 			String sql = "DELETE from VENCIMIENTO where ID='" + vencimiento.getId() +"';";
 			stmt.executeUpdate(sql);
 			c.commit();
@@ -116,7 +114,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			System.exit(0);
 		}
 		listaVencimientos.remove(vencimiento);
-		System.out.println("Deleted:" + vencimiento.getId());
 		System.out.println("Operation done successfully");
 	}
 
