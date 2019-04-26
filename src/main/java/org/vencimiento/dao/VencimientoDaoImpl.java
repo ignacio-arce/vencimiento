@@ -34,12 +34,25 @@ public class VencimientoDaoImpl implements VencimientoDao {
 	@Override
 	public List<Vencimiento> getListaVencimientos() {
 		try {
-			Class.forName(DRIVER);
+                        String sql ="";
+			
+                        if (!new java.io.File(DBURL.split(":")[2]).exists()) {
+                            sql = "CREATE TABLE VENCIMIENTO " +
+                        "(ID INTEGER PRIMARY KEY AUTOINCREMENT    NOT NULL," +
+                        " Tipo           TEXT    NOT NULL, " + 
+                        " Fecha           TEXT     NOT NULL, " + 
+                        " Lote           TEXT)";
+                        }
+                        Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
-			c.setAutoCommit(false);
+			
 			System.out.println("DB opened");
 			stmt = c.createStatement();
-			
+			if (!sql.equals("")) {
+                            System.out.println("ok");
+                            stmt.executeUpdate(sql);
+                        }
+                        c.setAutoCommit(false);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM VENCIMIENTO;");
 			
 			listaVencimientos = new ArrayList<Vencimiento>();
@@ -58,7 +71,9 @@ public class VencimientoDaoImpl implements VencimientoDao {
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                        e.printStackTrace();
 			System.exit(0);
+                        
 		}
 		return null;
 	}
