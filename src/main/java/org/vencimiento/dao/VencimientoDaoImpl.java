@@ -19,7 +19,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 		
 	}
 	
-	private int[] toInteger(String cadenas[]) {
+	public int[] toInteger(String cadenas[]) {
 		int salidaInt[] = new int[3];
 		int i=0;
 		for(String s: cadenas) {
@@ -77,10 +77,10 @@ public class VencimientoDaoImpl implements VencimientoDao {
 		}
 		return null;
 	}
-
+	
+	@Deprecated
 	@Override
 	public Vencimiento getVencimiento(int n) {
-		
 		return listaVencimientos.get(n);
 	}
 

@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import dao.VencimientoDao;
 import model.Vencimiento;
@@ -30,6 +31,7 @@ public class Controller {
 	protected void run() {
 		view.agregarListeners(new MenuListener());
 		cargarDatosEnTabla();
+		
 	}
 
 	private class BotonCargarDatosListener implements ActionListener {
@@ -79,7 +81,17 @@ public class Controller {
 				if (view.getTable().getSelectedRow() > -1) {
 					if (JOptionPane.showConfirmDialog(view, "Confirmacion",
 							"Desea borrar el item seleccionado?", 0) == 0) { // Si
-						vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(view.getTable().getSelectedRow()));
+						Object o[] = armarFilaElegida(view.getTableModel(), view.getTable().getSelectedRow());
+						int fecha[] = vencimientoDao.toInteger(((String) o[1]).split("-"));
+						
+						Vencimiento vencimientoElegido = new Vencimiento(LocalDate.of(fecha[0],fecha[1],fecha[2]),(String)o[0],(String)o[2]);
+						for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
+							if (vencimientoElegido.compareTo(v) == 0) {
+								vencimientoDao.borrarVencimiento(v);
+								break;
+							}
+						}
+						
 						
 						cargarDatosEnTabla();
 						view.showPanelTabla();
@@ -94,6 +106,18 @@ public class Controller {
 					break;
 			}
 		}
+
+		private Object[] armarFilaElegida(DefaultTableModel t, int filaElegida) {
+			Object[] o = new String[t.getColumnCount()-1]; // -1 avoid the status of expiry date
+			for (int j = 0; j<t.getRowCount(); j++) {
+				for (int i = 0; i<t.getColumnCount()-1; i++) {
+					if (j == filaElegida) {
+						o[i] = t.getValueAt(j, i);
+					}
+				}
+			}
+			return o;
+		}
 		
 	}
 	
@@ -104,7 +128,7 @@ public class Controller {
 	public void cargarDatosEnTabla() {
 		view.getTableModel().setRowCount(0);
 		for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
-			Object data[] = { v.getTipo(), v.getFechaVencimiento() , v.getLote() , isExpired(v.getFechaVencimiento()) };
+			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString() , v.getLote() , isExpired(v.getFechaVencimiento()) };
 			view.getTableModel().addRow(data);
 		}
 	}

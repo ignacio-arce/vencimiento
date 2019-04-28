@@ -12,4 +12,5 @@ public interface VencimientoDao {
 	public Vencimiento getVencimiento(int n);
 	public void guardarVencimientos(Vencimiento vencimiento);
 	public void borrarVencimiento(Vencimiento vencimiento);
+	public int[] toInteger(String[] split);
 }

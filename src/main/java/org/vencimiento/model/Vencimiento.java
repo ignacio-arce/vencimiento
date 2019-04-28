@@ -4,7 +4,7 @@ package model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Vencimiento implements Serializable {
+public class Vencimiento implements Serializable, Comparable<Vencimiento>{
 	/**
 	 *  
 	 */
@@ -37,7 +37,7 @@ public class Vencimiento implements Serializable {
 
 	public int getId() {
 		return id;
-}
+	}
 	
 	public String getTipo() {
 		return tipo;
@@ -61,6 +61,16 @@ public class Vencimiento implements Serializable {
 	
 	public LocalDate getFechaVencimiento() {
 		return fechaVencimiento;
+	}
+
+	@Override
+	public int compareTo(Vencimiento v) {
+		if (v.getLote().equals(this.getLote()) && v.getFechaVencimiento().equals(this.getFechaVencimiento()) && v.getTipo().equals(this.getTipo())) {
+			return 0;
+		} else {
+			return -1;
+		}
+		
 	}
 
 }
