@@ -87,12 +87,14 @@ public class Controller {
 						int fecha[] = vencimientoDao.toInteger(((String) o[1]).split("-"));
 						
 						Vencimiento vencimientoElegido = new Vencimiento(LocalDate.of(fecha[0],fecha[1],fecha[2]),(String)o[0],(String)o[2]);
-						for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
-							if (vencimientoElegido.compareTo(v) == 0) {
-								vencimientoDao.borrarVencimiento(v);
-								break;
-							}
-						}
+						
+                                               /* vencimientoDao.getListaVencimientos().forEach(v -> {
+                                                    
+                                                    if(vencimientoElegido.compareTo(v) == 0) {
+                                                        vencimientoDao.borrarVencimiento(v);
+                                                    }
+                                                });*/
+                                                vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(Collections.binarySearch(vencimientoDao.getListaVencimientos(), vencimientoElegido)));
 						cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
 						view.changePanel("scrollPane");
 					}
