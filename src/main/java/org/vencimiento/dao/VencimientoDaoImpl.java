@@ -45,10 +45,9 @@ public class VencimientoDaoImpl implements VencimientoDao {
                         Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			
-			System.out.println("DB opened");
+			//System.out.println("DB opened");
 			stmt = c.createStatement();
 			if (!sql.equals("")) {
-                            System.out.println("ok");
                             stmt.executeUpdate(sql);
                         }
                         c.setAutoCommit(false);
@@ -77,7 +76,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 		return null;
 	}
 	
-	@Deprecated
 	@Override
 	public Vencimiento getVencimiento(int n) {
 		return listaVencimientos.get(n);
@@ -89,7 +87,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			System.out.println("DB opened");
+			//System.out.println("DB opened");
 			stmt = c.createStatement();
 			
 			String sql = "INSERT INTO VENCIMIENTO (Fecha,Tipo,Lote) " + "VALUES ( '" + ven.getFechaVencimiento()
@@ -106,7 +104,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			System.exit(0);
 		}
 		listaVencimientos.add(ven);
-		System.out.println("Records created successfully");
+		System.out.println("Datos cargados satisfactoriamente");
 	}
 
 	@Override
@@ -115,7 +113,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			System.out.println("DB opened");
+			//System.out.println("DB opened");
 			stmt = c.createStatement();
 			
 			String sql = "DELETE from VENCIMIENTO where ID='" + vencimiento.getId() +"';";
@@ -128,7 +126,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			System.exit(0);
 		}
 		listaVencimientos.remove(vencimiento);
-		System.out.println("Operation done successfully");
+		System.out.println("Vencimiento borrado satisfactoriamente");
 	}
 
 }
