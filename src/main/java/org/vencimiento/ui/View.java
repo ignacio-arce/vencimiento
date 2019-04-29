@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -38,7 +39,7 @@ public class View extends JFrame {
 	
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private JScrollPane scrollPane;
+	private JScrollPane scrollPaneTabla;
 	
 	private final JMenuBar menu = new JMenuBar();
 	private final JMenu menuOpciones = new JMenu("Opciones");
@@ -46,6 +47,7 @@ public class View extends JFrame {
 	private final JMenuItem menuOpcionesAgregar = new JMenuItem("Agregar");
 	private final JMenuItem menuOpcionesQuitar = new JMenuItem("Quitar");
 	private final Container cp = getContentPane();
+	private JPanel panelDeContenido;
 	private JTextField dia;
 	private JTextField mes;
 	private JTextField anio;
@@ -76,6 +78,8 @@ public class View extends JFrame {
 		cp.removeAll();
 		cp.setLayout(new BorderLayout());
 
+		panelDeContenido = new JPanel(new CardLayout());
+		
 		// Menu de Opciones
 		menuOpciones.add(menuOpcionesAgregar);
 		menuOpciones.add(menuOpcionesQuitar);
@@ -84,21 +88,17 @@ public class View extends JFrame {
 		cp.add(menu, BorderLayout.NORTH);
 
 		// ScrollPane
-		scrollPane = new JScrollPane(table);
-		cp.add(scrollPane, BorderLayout.CENTER);
-	}
-
-	public void showPanelAgregarVencimiento() {
-		cp.removeAll();
-		cp.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 15));
+		scrollPaneTabla = new JScrollPane(table);
 		
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(4, 2, 5, 9));
+		Container contenedorPanelVencimiento = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 15));
+		
+		JPanel panelAgregarVencimiento = new JPanel();
+		panelAgregarVencimiento.setLayout(new GridLayout(4, 2, 5, 9));
 		
 		
 		// Panel Fecha
 		JPanel panelFecha = new JPanel();
-		panel.add(new JLabel("Fecha:", SwingConstants.RIGHT));
+		panelAgregarVencimiento.add(new JLabel("Fecha:", SwingConstants.RIGHT));
 		panelFecha.setLayout(new FlowLayout(FlowLayout.LEADING, 1, 0));
 		dia = new JTextField("DD", 3);
 		panelFecha.add(dia);
@@ -108,30 +108,44 @@ public class View extends JFrame {
 		panelFecha.add(new JLabel("-"));
 		anio = new JTextField("YYYY", 3);
 		panelFecha.add(anio);
-		panel.add(panelFecha);
+		panelAgregarVencimiento.add(panelFecha);
 		
 		// TextField Lote
-		panel.add(new JLabel("Lote:", SwingConstants.RIGHT));
+		panelAgregarVencimiento.add(new JLabel("Lote:", SwingConstants.RIGHT));
 		lote = new JTextField(8);
-		panel.add(lote);
+		panelAgregarVencimiento.add(lote);
 		
 		// TextField Tipo
-		panel.add(new JLabel("Tipo:", SwingConstants.RIGHT));
+		panelAgregarVencimiento.add(new JLabel("Tipo:", SwingConstants.RIGHT));
 		tipo = new JTextField(10);
-		panel.add(tipo);
+		panelAgregarVencimiento.add(tipo);
 
 		// Panel vacio
-		panel.add(new JPanel());
+		panelAgregarVencimiento.add(new JPanel());
 		
 		// Boton cargar datos
 		botonCargar = new JButton("Cargar datos");
-		panel.add(botonCargar);
-		
-		cp.add(panel);
-		cp.validate();
-		cp.repaint();
+		panelAgregarVencimiento.add(botonCargar);
+		contenedorPanelVencimiento.add(panelAgregarVencimiento);
+		panelDeContenido.add(scrollPaneTabla,"scrollPane");
+		panelDeContenido.add(contenedorPanelVencimiento,"panelVencimiento");
+		cp.add(panelDeContenido, BorderLayout.CENTER);
+	}
+	
+	public void changePanel(String panel) {
+		CardLayout cl = (CardLayout)(panelDeContenido.getLayout());
+		cl.show(panelDeContenido, panel);
 	}
 
+		
+		
+	
+
+	
+	
+	/*
+	 *  Agregar Listeners
+	 */
 	
 	public void agregarListenersTextoFecha(FocusListener action) {
 		dia.addFocusListener(action);
@@ -153,7 +167,7 @@ public class View extends JFrame {
 	 * Getters & Setters
 	 * 
 	 * */
-	
+
 	public String getTipo() {
 		return tipo.getText();
 	}

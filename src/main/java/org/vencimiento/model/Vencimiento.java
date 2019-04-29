@@ -67,8 +67,10 @@ public class Vencimiento implements Serializable, Comparable<Vencimiento>{
 	public int compareTo(Vencimiento v) {
 		if (v.getLote().equals(this.getLote()) && v.getFechaVencimiento().equals(this.getFechaVencimiento()) && v.getTipo().equals(this.getTipo())) {
 			return 0;
-		} else {
+		} else if (v.getFechaVencimiento().isAfter(this.getFechaVencimiento())) {
 			return -1;
+		}else {
+			return 1;
 		}
 		
 	}

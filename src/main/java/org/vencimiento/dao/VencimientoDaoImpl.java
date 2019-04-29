@@ -3,13 +3,12 @@ package dao;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import model.Vencimiento;
 
 public class VencimientoDaoImpl implements VencimientoDao {
 
-	private List<Vencimiento> listaVencimientos;
+	private ArrayList<Vencimiento> listaVencimientos;
 	private Connection c = null;
 	private Statement stmt = null;
 	private static final String DRIVER = "org.sqlite.JDBC";
@@ -32,7 +31,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 
 	
 	@Override
-	public List<Vencimiento> getListaVencimientos() {
+	public ArrayList<Vencimiento> getListaVencimientos() {
 		try {
                         String sql ="";
 			

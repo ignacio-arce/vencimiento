@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -30,8 +32,7 @@ public class Controller {
 
 	protected void run() {
 		view.agregarListeners(new MenuListener());
-		cargarDatosEnTabla();
-		
+		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
 	}
 
 	private class BotonCargarDatosListener implements ActionListener {
@@ -39,9 +40,10 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().getClass() == JButton.class) {
 				if (view.getFecha() != null) {
+					ArrayList<Vencimiento> listaVencimientos = vencimientoDao.getListaVencimientos();
 					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 					vencimientoDao.guardarVencimientos(vencimiento);
-					cargarDatosEnTabla();
+					cargarDatosEnTabla(listaVencimientos);
 					view.showPanelTabla();
 					view.repaint();
 					view.validate();
@@ -73,7 +75,7 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			switch (e.getActionCommand()) {
 			case "Agregar":
-				view.showPanelAgregarVencimiento();
+				view.changePanel("panelVencimiento");
 				view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 				view.agregarListenersTextoFecha(new TextoFechaListener());
 				break;
@@ -91,12 +93,8 @@ public class Controller {
 								break;
 							}
 						}
-						
-						
-						cargarDatosEnTabla();
-						view.showPanelTabla();
-						/*view.repaint();*/
-						view.revalidate();
+						cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
+						view.changePanel("scrollPane");
 					}
 				} else {
 					JOptionPane.showMessageDialog(view, "No se han seleccionado items", "Error", 0);
@@ -125,9 +123,11 @@ public class Controller {
 	 * Carga los datos a la tabla
 	 */
 	
-	public void cargarDatosEnTabla() {
+	public void cargarDatosEnTabla(ArrayList<Vencimiento> listaVencimientos) {
 		view.getTableModel().setRowCount(0);
-		for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
+		Collections.sort(listaVencimientos);
+		for (Vencimiento v : listaVencimientos) {
+			
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString() , v.getLote() , isExpired(v.getFechaVencimiento()) };
 			view.getTableModel().addRow(data);
 		}
