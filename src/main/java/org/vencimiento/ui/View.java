@@ -75,10 +75,9 @@ public class View extends JFrame {
 
 
 	public void showPanelTabla() {
-		cp.removeAll();
 		cp.setLayout(new BorderLayout());
 
-		panelDeContenido = new JPanel(new CardLayout());
+		
 		
 		// Menu de Opciones
 		menuOpciones.add(menuOpcionesAgregar);
@@ -123,6 +122,9 @@ public class View extends JFrame {
 		// Panel vacio
 		panelAgregarVencimiento.add(new JPanel());
 		
+                // Panel de contenido
+                panelDeContenido = new JPanel(new CardLayout());
+                
 		// Boton cargar datos
 		botonCargar = new JButton("Cargar datos");
 		panelAgregarVencimiento.add(botonCargar);
@@ -133,6 +135,12 @@ public class View extends JFrame {
 	}
 	
 	public void changePanel(String panel) {
+                if (menu.isVisible() && panel.equals("panelVencimiento")) {
+                    menu.setVisible(false);
+                    
+                } else {
+                    menu.setVisible(true);
+                }
 		CardLayout cl = (CardLayout)(panelDeContenido.getLayout());
 		cl.show(panelDeContenido, panel);
 	}
