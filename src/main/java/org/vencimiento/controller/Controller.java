@@ -44,9 +44,7 @@ public class Controller {
 					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 					vencimientoDao.guardarVencimientos(vencimiento);
 					cargarDatosEnTabla(listaVencimientos);
-					view.showPanelTabla();
-					view.repaint();
-					view.validate();
+                                        view.changePanel("scrollPane");
 				}
 			}
 		}
@@ -75,9 +73,9 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			switch (e.getActionCommand()) {
 			case "Agregar":
-				view.changePanel("panelVencimiento");
 				view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 				view.agregarListenersTextoFecha(new TextoFechaListener());
+                                view.changePanel("panelVencimiento");
 				break;
 			case "Quitar":
 				if (view.getTable().getSelectedRow() > -1) {
@@ -96,7 +94,6 @@ public class Controller {
                                                 });*/
                                                 vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(Collections.binarySearch(vencimientoDao.getListaVencimientos(), vencimientoElegido)));
 						cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
-						view.changePanel("scrollPane");
 					}
 				} else {
 					JOptionPane.showMessageDialog(view, "No se han seleccionado items", "Error", 0);
