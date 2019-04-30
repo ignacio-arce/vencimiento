@@ -32,6 +32,8 @@ public class Controller {
 
 	protected void run() {
 		view.agregarListeners(new MenuListener());
+                view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
+		view.agregarListenersTextoFecha(new TextoFechaListener());
 		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
 	}
 
@@ -40,10 +42,9 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().getClass() == JButton.class) {
 				if (view.getFecha() != null) {
-					ArrayList<Vencimiento> listaVencimientos = vencimientoDao.getListaVencimientos();
 					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 					vencimientoDao.guardarVencimientos(vencimiento);
-					cargarDatosEnTabla(listaVencimientos);
+					cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
                                         view.changePanel("scrollPane");
 				}
 			}
@@ -73,8 +74,6 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			switch (e.getActionCommand()) {
 			case "Agregar":
-				view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
-				view.agregarListenersTextoFecha(new TextoFechaListener());
                                 view.changePanel("panelVencimiento");
 				break;
 			case "Quitar":
@@ -92,7 +91,13 @@ public class Controller {
                                                         vencimientoDao.borrarVencimiento(v);
                                                     }
                                                 });*/
-                                                vencimientoDao.borrarVencimiento(vencimientoDao.getVencimiento(Collections.binarySearch(vencimientoDao.getListaVencimientos(), vencimientoElegido)));
+                                                for (Vencimiento v: vencimientoDao.getListaVencimientos()) {
+                                                    if (vencimientoElegido.compareTo(v) == 0 ) {
+                                                        vencimientoDao.borrarVencimiento(v);
+                                                        break;
+                                                    }
+                                                    
+                                                }
 						cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
 					}
 				} else {
@@ -123,10 +128,12 @@ public class Controller {
 	 */
 	
 	public void cargarDatosEnTabla(ArrayList<Vencimiento> listaVencimientos) {
+                // Reinicia el table model
 		view.getTableModel().setRowCount(0);
+                
+                // Ordenar por vencimiento próximo
 		Collections.sort(listaVencimientos);
 		for (Vencimiento v : listaVencimientos) {
-			
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString() , v.getLote() , isExpired(v.getFechaVencimiento()) };
 			view.getTableModel().addRow(data);
 		}
