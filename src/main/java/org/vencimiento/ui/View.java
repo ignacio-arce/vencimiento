@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;import javax.swing.ListSelectionModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -167,7 +167,7 @@ public class View extends JFrame {
 		botonCargar.addActionListener(action);
 	}
 
-	public void agregarListeners(ActionListener action) {
+	public void agregarListenersMenu(ActionListener action) {
 		menuAcercaDe.addActionListener(action);
 		menuOpcionesAgregar.addActionListener(action);
 		menuOpcionesQuitar.addActionListener(action);
