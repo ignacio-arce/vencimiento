@@ -31,7 +31,7 @@ public class Controller {
     }
 
     protected void run() {
-        view.agregarListenersMenu(new MenuListener());
+        view.agregarListenersMenu(new MainMenuListener());
         view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
         view.agregarListenersTextoFecha(new TextoFechaListener());
         cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
@@ -69,7 +69,7 @@ public class Controller {
 
     }
 
-    private class MenuListener implements ActionListener {
+    private class MainMenuListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -83,7 +83,6 @@ public class Controller {
                                 "Desea borrar el item seleccionado?", 0) == 0) { // Si
                             int filasElegidas[] = view.getTable().getSelectedRows();
                             for (int i = 0; i < filasElegidas.length; i++) {
-                                System.out.println(filasElegidas.length);
                                 Object o[] = armarFilaElegida(view.getTableModel(), filasElegidas[i]);
                                 int fecha[] = vencimientoDao.toInteger(((String) o[1]).split("-"));
 
@@ -94,7 +93,6 @@ public class Controller {
                                         vencimientoDao.borrarVencimiento(v);
                                         break;
                                     }
-
                                 }
                             }
 
@@ -104,7 +102,26 @@ public class Controller {
                         JOptionPane.showMessageDialog(view, "No se han seleccionado items", "Error", 0);
                     }
                     break;
+                case "Buscar":
+                	String cadenaBuscada=JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar");
+                	ArrayList<Vencimiento> vencimientosCoincidentes = new ArrayList<Vencimiento>();
+                	for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
+                        if(v.getTipo().contains(cadenaBuscada) || v.getLote().contains(cadenaBuscada)) {
+                        	vencimientosCoincidentes.add(v);
+                        }
+                    }
+                	if (!vencimientosCoincidentes.isEmpty()) {
+                		cargarDatosEnTabla(vencimientosCoincidentes);
+                	} else {
+                		JOptionPane.showMessageDialog(null,"No se han encontrado coincidencias para \"" + cadenaBuscada + "\"", "Buscador",0);
+                	}
+                	
+                	break;
+                case "Acerca de":
+                	System.out.println("daaa");
+                	break;
                 default:
+                	System.out.println("Error desconocido");
                     break;
             }
         }

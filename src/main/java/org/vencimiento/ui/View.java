@@ -35,39 +35,32 @@ import javax.swing.table.DefaultTableModel;
 public class View extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	private final Container cp = getContentPane();
 	private final String[] COLUMN_NAMES = { "Insumo", "Fecha vto.", "Lote", "Estado" };
-
-	
-	private DefaultTableModel tableModel;
-	private JTable table;
-	private JScrollPane scrollPaneTabla;
-	
 	private final JMenuBar menu = new JMenuBar();
 	private final JMenu menuOpciones = new JMenu("Opciones");
 	private final JMenu menuAcercaDe = new JMenu("Acerca de");;
 	private final JMenuItem menuOpcionesAgregar = new JMenuItem("Agregar");
 	private final JMenuItem menuOpcionesQuitar = new JMenuItem("Quitar");
-	private final Container cp = getContentPane();
+	private final JMenuItem menuOpcionesBuscar = new JMenuItem("Buscar");
+	private final JButton botonCargar = new JButton("Cargar datos");
+	private DefaultTableModel tableModel;
+	private JTable table;
+	private JScrollPane scrollPaneTabla;
 	private JPanel panelDeContenido;
 	private JTextField dia;
 	private JTextField mes;
 	private JTextField anio;
 	private JTextField lote;
 	private JTextField tipo;
-	private JButton botonCargar;
+;
 
 	/**
 	 * Initialise the JFrame containing the various JSwing components
 	 * responsible of the Vencimiento System.
 	 */
 	public View() {
-		
-		// Tabla & Modelo de tabla
-		tableModel = new DefaultTableModel(COLUMN_NAMES,0);
-		table = new JTable(tableModel);
-		table.setRowSelectionAllowed(true);
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		showPanelTabla();
+		crearGUI();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Vencimiento");
@@ -76,14 +69,29 @@ public class View extends JFrame {
 	}
 
 
-	public void showPanelTabla() {
+	/**
+	 * Crear GUI:
+	 * Crea un panel de contenido del tipo CardLayout y en el crea
+	 * el panel de la tabla y el panel agregar vencimiento
+	 */
+	
+	public void crearGUI() {
 		cp.setLayout(new BorderLayout());
-
+		
+		
+		//// Primer panel: Tabla
+		
+		// Tabla & Modelo de tabla
+		tableModel = new DefaultTableModel(COLUMN_NAMES,0);
+		table = new JTable(tableModel);
+		table.setRowSelectionAllowed(true);
+		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		
 		
 		// Menu de Opciones
 		menuOpciones.add(menuOpcionesAgregar);
 		menuOpciones.add(menuOpcionesQuitar);
+		menuOpciones.add(menuOpcionesBuscar);
 		menu.add(menuOpciones);
 		menu.add(menuAcercaDe);
 		cp.add(menu, BorderLayout.NORTH);
@@ -91,8 +99,9 @@ public class View extends JFrame {
 		// ScrollPane
 		scrollPaneTabla = new JScrollPane(table);
 		
-		Container contenedorPanelVencimiento = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 15));
+		////Segundo Panel: Agregar Vencimiento
 		
+		Container contenedorPanelVencimiento = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 15));
 		JPanel panelAgregarVencimiento = new JPanel();
 		panelAgregarVencimiento.setLayout(new GridLayout(4, 2, 5, 9));
 		
@@ -124,13 +133,13 @@ public class View extends JFrame {
 		// Panel vacio
 		panelAgregarVencimiento.add(new JPanel());
 		
-                // Panel de contenido
-                panelDeContenido = new JPanel(new CardLayout());
                 
 		// Boton cargar datos
-		botonCargar = new JButton("Cargar datos");
 		panelAgregarVencimiento.add(botonCargar);
 		contenedorPanelVencimiento.add(panelAgregarVencimiento);
+		
+		////// Panel de contenido
+        panelDeContenido = new JPanel(new CardLayout());
 		panelDeContenido.add(scrollPaneTabla,"scrollPane");
 		panelDeContenido.add(contenedorPanelVencimiento,"panelVencimiento");
 		cp.add(panelDeContenido, BorderLayout.CENTER);
@@ -146,10 +155,6 @@ public class View extends JFrame {
 		CardLayout cl = (CardLayout)(panelDeContenido.getLayout());
 		cl.show(panelDeContenido, panel);
 	}
-
-		
-		
-	
 
 	
 	
@@ -168,9 +173,9 @@ public class View extends JFrame {
 	}
 
 	public void agregarListenersMenu(ActionListener action) {
-		menuAcercaDe.addActionListener(action);
 		menuOpcionesAgregar.addActionListener(action);
 		menuOpcionesQuitar.addActionListener(action);
+		menuOpcionesBuscar.addActionListener(action);
 	}
 
 	/*
