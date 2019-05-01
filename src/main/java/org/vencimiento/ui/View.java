@@ -64,7 +64,8 @@ public class View extends JFrame {
 		// Tabla & Modelo de tabla
 		tableModel = new DefaultTableModel(COLUMN_NAMES,0);
 		table = new JTable(tableModel);
-		table.setSelectionMode(0);
+		table.setRowSelectionAllowed(true);
+		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		showPanelTabla();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
