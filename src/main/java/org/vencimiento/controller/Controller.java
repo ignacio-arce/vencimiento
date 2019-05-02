@@ -151,11 +151,13 @@ public class Controller {
 
 		// Ordenar por vencimiento próximo
 		Collections.sort(listaVencimientos);
-		for (Vencimiento v : listaVencimientos) {
+                
+                // Agrega los vencimientos a la tabla
+		listaVencimientos.forEach(v-> {
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(),
 					isExpired(v.getFechaVencimiento()) };
 			view.getTableModel().addRow(data);
-		}
+		});
 	}
 
 	/**
