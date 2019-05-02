@@ -1,14 +1,13 @@
 package dao;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import model.Vencimiento;
 
 public class VencimientoDaoImpl implements VencimientoDao {
 
-	private ArrayList<Vencimiento> listaVencimientos;
+	private static ArrayList<Vencimiento> listaVencimientos;
 	private Connection c = null;
 	private Statement stmt = null;
 	private static final String NOMBRE_TABLA = "VENCIMIENTO";
@@ -16,55 +15,39 @@ public class VencimientoDaoImpl implements VencimientoDao {
 	private static final String DBURL = "jdbc:sqlite:data.db";
 
 	public VencimientoDaoImpl() {
-		
+
 	}
-	
-	
-	// TODO: BORRAR ESTO
-	public int[] toInteger(String cadenas[]) {
-		int salidaInt[] = new int[3];
-		int i=0;
-		for(String s: cadenas) {
-			salidaInt[i]=Integer.valueOf(s);
-			i++;
-		}
-		return salidaInt;
-	}
-	
 
 	
 	@Override
 	public ArrayList<Vencimiento> getListaVencimientos() {
 		try {
-                        String sql ="";
-			
-                        if (!new java.io.File(DBURL.split(":")[2]).exists()) {
-                            sql = "CREATE TABLE " + NOMBRE_TABLA + " " +
-                        "(ID INTEGER PRIMARY KEY AUTOINCREMENT    NOT NULL," +
-                        " Tipo           TEXT    NOT NULL, " + 
-                        " Fecha           TEXT     NOT NULL, " + 
-                        " Lote           TEXT)";
-                        }
-                        Class.forName(DRIVER);
+			String sql = "";
+
+			if (!new java.io.File(DBURL.split(":")[2]).exists()) {
+				sql = "CREATE TABLE " + NOMBRE_TABLA + " " + "(ID INTEGER PRIMARY KEY AUTOINCREMENT    NOT NULL,"
+						+ " Tipo           TEXT    NOT NULL, " + " Fecha           TEXT     NOT NULL, "
+						+ " Lote           TEXT)";
+			}
+			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
-			
-			//System.out.println("DB opened");
+
+			// System.out.println("DB opened");
 			stmt = c.createStatement();
 			if (!sql.equals("")) {
-                            stmt.executeUpdate(sql);
-                        }
-                        c.setAutoCommit(false);
+				stmt.executeUpdate(sql);
+			}
+			c.setAutoCommit(false);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM " + NOMBRE_TABLA + ";");
-			
+
 			listaVencimientos = new ArrayList<Vencimiento>();
 			while (rs.next()) {
-				int fecha[] = toInteger(rs.getString("Fecha").split("-"));
 				String tipo = rs.getString("Tipo");
 				String lote = rs.getString("Lote");
 				int id = rs.getInt("ID");
-				listaVencimientos.add(new Vencimiento(LocalDate.of(fecha[0],fecha[1],fecha[2]), tipo, lote, id));
+				listaVencimientos.add(new Vencimiento(rs.getString("Fecha").split("-"), tipo, lote, id));
 			}
-			
+
 			rs.close();
 			stmt.close();
 			c.close();
@@ -72,13 +55,13 @@ public class VencimientoDaoImpl implements VencimientoDao {
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                        e.printStackTrace();
+			e.printStackTrace();
 			System.exit(0);
-                        
+
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Vencimiento getVencimiento(int n) {
 		return listaVencimientos.get(n);
@@ -90,11 +73,11 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			//System.out.println("DB opened");
+			// System.out.println("DB opened");
 			stmt = c.createStatement();
-			
-			String sql = "INSERT INTO " + NOMBRE_TABLA + " (Fecha,Tipo,Lote) " + "VALUES ( '" + ven.getFechaVencimiento()
-					+ "', '" + ven.getTipo() + "' ,'" + ven.getLote() + "');";
+
+			String sql = "INSERT INTO " + NOMBRE_TABLA + " (Fecha,Tipo,Lote) " + "VALUES ( '"
+					+ ven.getFechaVencimiento() + "', '" + ven.getTipo() + "' ,'" + ven.getLote() + "');";
 			stmt.executeUpdate(sql);
 			ResultSet rs = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='" + NOMBRE_TABLA + "';");
 			ven.setId(rs.getInt("seq"));
@@ -116,10 +99,10 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			//System.out.println("DB opened");
+			// System.out.println("DB opened");
 			stmt = c.createStatement();
-			
-			String sql = "DELETE from " + NOMBRE_TABLA + " where ID='" + vencimiento.getId() +"';";
+
+			String sql = "DELETE from " + NOMBRE_TABLA + " where ID='" + vencimiento.getId() + "';";
 			stmt.executeUpdate(sql);
 			c.commit();
 			stmt.close();

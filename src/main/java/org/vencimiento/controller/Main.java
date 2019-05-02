@@ -13,7 +13,7 @@ public class Main {
 			public void run() {
 				VencimientoDao vencimientoDao = new VencimientoDaoImpl();
 				View view = new View();
-				Controller controller = new Controller(vencimientoDao,view);
+				Controller controller = new Controller(vencimientoDao, view);
 				view.setVisible(true);
 				controller.run();
 			}
