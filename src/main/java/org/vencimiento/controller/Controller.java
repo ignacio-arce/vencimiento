@@ -8,47 +8,75 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import dao.VencimientoDao;
+import java.awt.TrayIcon;
+import java.util.TimerTask;
 import model.Vencimiento;
 import ui.View;
 
 /**
  * @author acerNacho
  */
-public class Controller {
+public class Controller extends TimerTask{
 
-	private View view;
-	private VencimientoDao vencimientoDao;
-
+	private final View view;
+	private final VencimientoDao vencimientoDao;
+        private int cuantosHayVencidos = 0;
+        
 	protected Controller(VencimientoDao vencimientoDao, View view) {
 		this.view = view;
 		this.vencimientoDao = vencimientoDao;
 	}
 
-	protected void run() {
+	protected void init() {
 		view.agregarListenersMenu(new MainMenuListener());
 		view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 		view.agregarListenersTextoFecha(new TextoFechaListener());
+                view.agregarListenersNotificacion(new IconoNotificacionListener());
 		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
+                notificarVencimientos();
 	}
 
+        @Override
+        public void run() {
+            notificarVencimientos();
+        }
+
+        
+
+        private class IconoNotificacionListener implements ActionListener {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (e.getActionCommand()) {
+			case "Abrir":
+                            view.setVisible(true);
+                            break;
+                        case "Salir":
+                            System.exit(0);
+                            break;
+                        default:
+                            System.out.println("Error desconocido");
+                            break;
+                }
+            }
+        }
+        
 	private class BotonCargarDatosListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource().getClass() == JButton.class) {
 				if (view.getFecha() != null) {
 					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 					vencimientoDao.guardarVencimientos(vencimiento);
 					cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
 					view.changePanel("scrollPane");
 				}
-			}
+			
 		}
 	}
 
@@ -106,11 +134,13 @@ public class Controller {
 			case "Buscar":
 				String cadenaBuscada = JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar");
 				ArrayList<Vencimiento> vencimientosCoincidentes = new ArrayList<Vencimiento>();
-				for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
+                                
+				vencimientoDao.getListaVencimientos().forEach(v -> {
 					if (v.getTipo().contains(cadenaBuscada) || v.getLote().contains(cadenaBuscada)) {
 						vencimientosCoincidentes.add(v);
 					}
-				}
+				});
+                                
 				if (!vencimientosCoincidentes.isEmpty()) {
 					cargarDatosEnTabla(vencimientosCoincidentes);
 				} else {
@@ -118,9 +148,6 @@ public class Controller {
 							"No se han encontrado coincidencias para \"" + cadenaBuscada + "\"", "Buscador", 0);
 				}
 
-				break;
-			case "Acerca de":
-				System.out.println("daaa");
 				break;
 			default:
 				System.out.println("Error desconocido");
@@ -151,13 +178,18 @@ public class Controller {
 
 		// Ordenar por vencimiento próximo
 		Collections.sort(listaVencimientos);
+               
                 
                 // Agrega los vencimientos a la tabla
-		listaVencimientos.forEach(v-> {
+		for(Vencimiento v : listaVencimientos) {
+                        String estado = isExpired(v.getFechaVencimiento());
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(),
-					isExpired(v.getFechaVencimiento()) };
+					estado };
 			view.getTableModel().addRow(data);
-		});
+                        cuantosHayVencidos = (estado.equals("Vencido")) ? cuantosHayVencidos+1 : cuantosHayVencidos;
+		}
+                
+                
 	}
 
 	/**
@@ -171,5 +203,11 @@ public class Controller {
 		}
 
 	}
+        
+        private void notificarVencimientos() {
+            if (cuantosHayVencidos>0) {
+                view.getIconoNotificacion().mostrarNotificacion("Hay " +cuantosHayVencidos+ " items vencidos", "Aviso", TrayIcon.MessageType.WARNING);
+            }
+        }
 
 }

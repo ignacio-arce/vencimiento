@@ -51,7 +51,8 @@ public class View extends JFrame {
 	private JTextField mes;
 	private JTextField anio;
 	private JTextField lote;
-	private JTextField tipo;;
+	private JTextField tipo;
+        private final Notificacion iconoNotificacion = new Notificacion();
 
 	/**
 	 * Initialise the JFrame containing the various JSwing components responsible of
@@ -59,8 +60,8 @@ public class View extends JFrame {
 	 */
 	public View() {
 		crearGUI();
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setTitle("Vencimiento");
 		setLocationRelativeTo(null);
 		setSize(400, 200);
@@ -161,8 +162,13 @@ public class View extends JFrame {
 		dia.addFocusListener(action);
 		mes.addFocusListener(action);
 		anio.addFocusListener(action);
+                
 	}
 
+        public void agregarListenersNotificacion(ActionListener action) {
+            iconoNotificacion.agregarListeners(action);
+        }
+        
 	public void agregarListenersPanelAgregarVencimiento(ActionListener action) {
 		botonCargar.addActionListener(action);
 	}
@@ -216,5 +222,9 @@ public class View extends JFrame {
 	public String getLote() {
 		return lote.getText();
 	}
+        
+        public Notificacion getIconoNotificacion() {
+            return iconoNotificacion;
+        }
 
 }

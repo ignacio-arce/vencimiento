@@ -7,6 +7,8 @@ import model.Vencimiento;
 
 public class VencimientoDaoImpl implements VencimientoDao {
 
+    
+    
 	private static ArrayList<Vencimiento> listaVencimientos;
 	private Connection c = null;
 	private Statement stmt = null;
@@ -32,7 +34,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 
-			// System.out.println("DB opened");
 			stmt = c.createStatement();
 			if (!sql.equals("")) {
 				stmt.executeUpdate(sql);
@@ -73,7 +74,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			// System.out.println("DB opened");
 			stmt = c.createStatement();
 
 			String sql = "INSERT INTO " + NOMBRE_TABLA + " (Fecha,Tipo,Lote) " + "VALUES ( '"
@@ -89,7 +89,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		listaVencimientos.add(ven);
 		System.out.println("Datos cargados satisfactoriamente");
 	}
 
@@ -99,7 +98,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			Class.forName(DRIVER);
 			c = DriverManager.getConnection(DBURL);
 			c.setAutoCommit(false);
-			// System.out.println("DB opened");
 			stmt = c.createStatement();
 
 			String sql = "DELETE from " + NOMBRE_TABLA + " where ID='" + vencimiento.getId() + "';";
@@ -111,7 +109,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		listaVencimientos.remove(vencimiento);
 		System.out.println("Vencimiento borrado satisfactoriamente");
 	}
 

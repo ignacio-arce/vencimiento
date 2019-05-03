@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 
 import dao.VencimientoDao;
 import dao.VencimientoDaoImpl;
+import java.util.Timer;
 import ui.View;
 
 public class Main {
@@ -11,11 +12,13 @@ public class Main {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+                                final Timer t = new Timer();
 				VencimientoDao vencimientoDao = new VencimientoDaoImpl();
 				View view = new View();
 				Controller controller = new Controller(vencimientoDao, view);
 				view.setVisible(true);
-				controller.run();
+				controller.init();
+                                t.schedule(controller, 5000);
 			}
 		});
 	}
