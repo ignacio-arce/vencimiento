@@ -133,7 +133,7 @@ public class Controller extends TimerTask{
 				break;
 			case "Buscar":
 				String cadenaBuscada = JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar");
-				ArrayList<Vencimiento> vencimientosCoincidentes = new ArrayList<Vencimiento>();
+				ArrayList<Vencimiento> vencimientosCoincidentes = new ArrayList<>();
                                 
 				vencimientoDao.getListaVencimientos().forEach(v -> {
 					if (v.getTipo().contains(cadenaBuscada) || v.getLote().contains(cadenaBuscada)) {

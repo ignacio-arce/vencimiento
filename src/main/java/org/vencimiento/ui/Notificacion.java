@@ -35,7 +35,7 @@ public class Notificacion {
             this.tryIcon = new TrayIcon(img,"Vencimiento app",menu);
             try {
                 SystemTray.getSystemTray().add(tryIcon);
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             } catch (AWTException | InterruptedException ex) {
                 Logger.getLogger(Notificacion.class.getName()).log(Level.SEVERE, null, ex);
             }

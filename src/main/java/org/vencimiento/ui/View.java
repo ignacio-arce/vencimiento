@@ -207,14 +207,11 @@ public class View extends JFrame {
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Formato de fecha invalido", "Error", JOptionPane.WARNING_MESSAGE);
 			System.err.println("Formato de fecha invalido");
-			// e.printStackTrace();
 		} catch (DateTimeException e) {
 			JOptionPane.showMessageDialog(this, "Fecha no valida", "Error", JOptionPane.ERROR_MESSAGE);
 			System.err.println("Fecha no valida");
 		} catch (Exception e) {
-			// TODO agregar error correspondiente a la fecha
-			// invalida
-			e.printStackTrace();
+			System.err.println("Error no contemplado");
 		}
 		return null;
 	}

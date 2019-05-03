@@ -56,9 +56,7 @@ public class VencimientoDaoImpl implements VencimientoDao {
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			e.printStackTrace();
 			System.exit(0);
-
 		}
 		return null;
 	}

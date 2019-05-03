@@ -18,8 +18,10 @@ public class Main {
 				Controller controller = new Controller(vencimientoDao, view);
 				view.setVisible(true);
 				controller.init();
-                                t.schedule(controller, 5000);
+                                t.scheduleAtFixedRate(controller, 0, 5000);
 			}
 		});
+                
+                
 	}
 }
