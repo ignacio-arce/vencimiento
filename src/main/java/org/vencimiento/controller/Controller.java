@@ -21,12 +21,12 @@ import ui.View;
 /**
  * @author acerNacho
  */
-public class Controller extends TimerTask{
+public class Controller extends TimerTask {
 
 	private final View view;
 	private final VencimientoDao vencimientoDao;
-        private int cuantosHayVencidos = 0;
-        
+	private int cuantosHayVencidos = 0;
+
 	protected Controller(VencimientoDao vencimientoDao, View view) {
 		this.view = view;
 		this.vencimientoDao = vencimientoDao;
@@ -36,47 +36,48 @@ public class Controller extends TimerTask{
 		view.agregarListenersMenu(new MainMenuListener());
 		view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 		view.agregarListenersTextoFecha(new TextoFechaListener());
-                view.agregarListenersNotificacion(new IconoNotificacionListener());
 		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
-                notificarVencimientos();
 	}
 
-        @Override
-        public void run() {
-            notificarVencimientos();
-        }
+	@Override
+	public void run() {
+		if (view.isSystemTraySupported()) {
+			view.agregarListenersNotificacion(new IconoNotificacionListener());
+			notificarVencimientos();
+		} else {
+			cancel();
+		}
+	}
 
-        
+	private class IconoNotificacionListener implements ActionListener {
 
-        private class IconoNotificacionListener implements ActionListener {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switch (e.getActionCommand()) {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			switch (e.getActionCommand()) {
 			case "Abrir":
-                            view.setVisible(true);
-                            break;
-                        case "Salir":
-                            System.exit(0);
-                            break;
-                        default:
-                            System.out.println("Error desconocido");
-                            break;
-                }
-            }
-        }
-        
+				view.setVisible(true);
+				break;
+			case "Salir":
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Error desconocido");
+				break;
+			}
+		}
+	}
+
 	private class BotonCargarDatosListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-				if (view.getFecha() != null) {
-					Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
-					vencimientoDao.guardarVencimientos(vencimiento);
-					cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
-					view.changePanel("scrollPane");
-				}
-			
+			if (view.getFecha() != null) {
+				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
+				vencimientoDao.guardarVencimientos(vencimiento);
+				cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
+				view.changePanel("scrollPane");
+			}
+
 		}
 	}
 
@@ -112,10 +113,9 @@ public class Controller extends TimerTask{
 						int filasElegidas[] = view.getTable().getSelectedRows();
 						for (int i = 0; i < filasElegidas.length; i++) {
 							Object o[] = armarFilaElegida(view.getTableModel(), filasElegidas[i]);
-							
 
-							Vencimiento vencimientoElegido = new Vencimiento(((String) o[1]).split("-"),
-									(String) o[0], (String) o[2]);
+							Vencimiento vencimientoElegido = new Vencimiento(((String) o[1]).split("-"), (String) o[0],
+									(String) o[2]);
 
 							for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
 								if (vencimientoElegido.compareTo(v) == 0) {
@@ -134,13 +134,13 @@ public class Controller extends TimerTask{
 			case "Buscar":
 				String cadenaBuscada = JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar");
 				ArrayList<Vencimiento> vencimientosCoincidentes = new ArrayList<>();
-                                
+
 				vencimientoDao.getListaVencimientos().forEach(v -> {
 					if (v.getTipo().contains(cadenaBuscada) || v.getLote().contains(cadenaBuscada)) {
 						vencimientosCoincidentes.add(v);
 					}
 				});
-                                
+
 				if (!vencimientosCoincidentes.isEmpty()) {
 					cargarDatosEnTabla(vencimientosCoincidentes);
 				} else {
@@ -178,18 +178,15 @@ public class Controller extends TimerTask{
 
 		// Ordenar por vencimiento próximo
 		Collections.sort(listaVencimientos);
-               
-                
-                // Agrega los vencimientos a la tabla
-		for(Vencimiento v : listaVencimientos) {
-                        String estado = isExpired(v.getFechaVencimiento());
-			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(),
-					estado };
+
+		// Agrega los vencimientos a la tabla
+		for (Vencimiento v : listaVencimientos) {
+			String estado = isExpired(v.getFechaVencimiento());
+			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(), estado };
 			view.getTableModel().addRow(data);
-                        cuantosHayVencidos = (estado.equals("Vencido")) ? cuantosHayVencidos+1 : cuantosHayVencidos;
+			cuantosHayVencidos = (estado.equals("Vencido")) ? cuantosHayVencidos + 1 : cuantosHayVencidos;
 		}
-                
-                
+
 	}
 
 	/**
@@ -203,11 +200,13 @@ public class Controller extends TimerTask{
 		}
 
 	}
-        
-        private void notificarVencimientos() {
-            if (cuantosHayVencidos>0) {
-                view.getIconoNotificacion().mostrarNotificacion("Hay " +cuantosHayVencidos+ " items vencidos", "Aviso", TrayIcon.MessageType.WARNING);
-            }
-        }
+
+	private void notificarVencimientos() {
+		if (cuantosHayVencidos > 0) {
+			view.getIconoNotificacion().mostrarNotificacion("Hay " + cuantosHayVencidos + " items vencidos", "Aviso",
+					TrayIcon.MessageType.WARNING);
+		}
+
+	}
 
 }

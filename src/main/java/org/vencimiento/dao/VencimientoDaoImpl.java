@@ -7,8 +7,6 @@ import model.Vencimiento;
 
 public class VencimientoDaoImpl implements VencimientoDao {
 
-    
-    
 	private static ArrayList<Vencimiento> listaVencimientos;
 	private Connection c = null;
 	private Statement stmt = null;
@@ -20,7 +18,6 @@ public class VencimientoDaoImpl implements VencimientoDao {
 
 	}
 
-	
 	@Override
 	public ArrayList<Vencimiento> getListaVencimientos() {
 		try {
