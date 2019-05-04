@@ -33,7 +33,7 @@ public class Notificacion {
 			menu.add(menuItemSalir);
 			menu.add(menuItemAbrir);
 			tryIcon = new TrayIcon(img, "Vencimiento app", menu);
-			//tryIcon.setImageAutoSize(true);
+			tryIcon.setImageAutoSize(true);
 			
 			try {
 				SystemTray.getSystemTray().add(tryIcon);
