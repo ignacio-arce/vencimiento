@@ -10,21 +10,19 @@ import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  *
  * @author lavoratoriov
  */
 public class Notificacion {
-	private TrayIcon tryIcon;
+	private static TrayIcon tryIcon;
 	private static final boolean SystemTraySupported = SystemTray.isSupported();
-	private Image img;
+	private static final Image img = java.awt.Toolkit.getDefaultToolkit().getImage("images/166.gif");
 	private PopupMenu menu;
 	private MenuItem menuItemSalir;
 	private MenuItem menuItemAbrir;
@@ -34,7 +32,9 @@ public class Notificacion {
 			crearMenuNotificacion();
 			menu.add(menuItemSalir);
 			menu.add(menuItemAbrir);
-			this.tryIcon = new TrayIcon(img, "Vencimiento app1", menu);
+			tryIcon = new TrayIcon(img, "Vencimiento app", menu);
+			tryIcon.setImageAutoSize(true);
+			
 			try {
 				SystemTray.getSystemTray().add(tryIcon);
 				Thread.sleep(1000);
@@ -45,7 +45,6 @@ public class Notificacion {
 	}
 
 	private void crearMenuNotificacion() {
-		this.img = Toolkit.getDefaultToolkit().getImage("empty_star.gif");
 		this.menu = new PopupMenu();
 		this.menuItemSalir = new MenuItem("Salir");
 		this.menuItemAbrir = new MenuItem("Abrir");

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -45,6 +46,7 @@ public class Controller extends TimerTask {
 			view.agregarListenersNotificacion(new IconoNotificacionListener());
 			notificarVencimientos();
 		} else {
+			view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			cancel();
 		}
 	}
