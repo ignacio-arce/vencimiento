@@ -21,7 +21,7 @@ public class Main {
 				Controller controller = new Controller(vencimientoDao, view);
 				view.setVisible(true);
 				controller.init();
-				t.scheduleAtFixedRate(controller, 0, 1, TimeUnit.MINUTES);
+				t.scheduleAtFixedRate(controller, 0, 8, TimeUnit.HOURS);
 			}
 		});
 
