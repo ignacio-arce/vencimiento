@@ -25,6 +25,8 @@ import ui.View;
  */
 public class Controller extends TimerTask {
 
+	private static final int CHECK_DAYS_AFTER_EXPIRY = 15;
+
 	private View view;
 	private VencimientoDao vencimientoDao;
 	private int cuantosHayVencidos = 0;
@@ -36,18 +38,18 @@ public class Controller extends TimerTask {
 
 	protected void init() {
 		view.agregarListenersMenu(new MainMenuListener());
-		
+
 		view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 		view.agregarListenersTextoFecha(new TextoFechaListener());
 		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
-		
+
 	}
 
 	@Override
 	public void run() {
 		if (view.isSystemTraySupported()) {
 			view.agregarListenersNotificacion(new IconoNotificacionListener());
-			
+
 			notificarVencimientos();
 		} else {
 			view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -187,7 +189,7 @@ public class Controller extends TimerTask {
 
 		// Agrega los vencimientos a la tabla
 		for (Vencimiento v : list) {
-			String estado = isExpired(v.getFechaVencimiento());
+			String estado = isExpired(v.getFechaVencimiento(), CHECK_DAYS_AFTER_EXPIRY);
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(), estado };
 			view.getTableModel().addRow(data);
 			cuantosHayVencidos = (estado.equals("Vencido")) ? cuantosHayVencidos + 1 : cuantosHayVencidos;
@@ -198,15 +200,20 @@ public class Controller extends TimerTask {
 	/**
 	 * Controla si los items estan vencidos
 	 */
-	private String isExpired(LocalDate fechaVencimiento) {
-		if (fechaVencimiento.isBefore(LocalDate.now())) {
+	private String isExpired(LocalDate fechaVencimiento, int diasAntes) {
+		if (LocalDate.now().isAfter(fechaVencimiento)) { // (fechaVencimiento, +inf)
 			return "Vencido";
+		} else if (LocalDate.now().isAfter(fechaVencimiento.minusDays(diasAntes))) { // (fechaVencimiento-diasAntes, +inf)
+			return "Proximo a vencer";
 		} else {
 			return "En fecha";
 		}
 
 	}
 
+	/*
+	 * Notifica items vencidos
+	 */
 	private void notificarVencimientos() {
 		if (cuantosHayVencidos > 0) {
 			view.getIconoNotificacion().mostrarNotificacion("Hay " + cuantosHayVencidos + " items vencidos", "Aviso",

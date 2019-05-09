@@ -64,7 +64,7 @@ public class View extends JFrame {
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setTitle("Vencimiento");
 		setLocationRelativeTo(null);
-		setSize(400, 200);
+		setSize(600, 200);
 	}
 
 	/**

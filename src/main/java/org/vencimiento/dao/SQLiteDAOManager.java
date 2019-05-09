@@ -15,7 +15,7 @@ public class SQLiteDAOManager implements DAOManager {
 
 		try {
 			Class.forName(DRIVER);
-			conn = getDBConnection();
+			conn = getConnection();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -30,7 +30,7 @@ public class SQLiteDAOManager implements DAOManager {
 		return this.vencimientoDao;
 	}
 
-	private static Connection getDBConnection() {
+	private static Connection getConnection() {
 		Connection dbConnection = null;
 		try {
 			Class.forName(DRIVER);
@@ -44,7 +44,6 @@ public class SQLiteDAOManager implements DAOManager {
 			System.out.println(e.getMessage());
 		}
 		return dbConnection;
-
 	}
 
 }
