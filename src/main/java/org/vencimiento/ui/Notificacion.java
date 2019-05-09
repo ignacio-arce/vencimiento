@@ -13,8 +13,6 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author lavoratoriov
@@ -38,8 +36,8 @@ public class Notificacion {
 			try {
 				SystemTray.getSystemTray().add(tryIcon);
 				Thread.sleep(1000);
-			} catch (AWTException | InterruptedException ex) {
-				Logger.getLogger(Notificacion.class.getName()).log(Level.SEVERE, null, ex);
+			} catch ( InterruptedException | AWTException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
 	}

@@ -4,17 +4,23 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.Vencimiento;
 
 public class VencimientoDaoImpl implements VencimientoDao {
 
 	private Connection conn = null;
+	
 	private static final String NOMBRE_TABLA = "VENCIMIENTO";
 	private final String INSERT = "INSERT INTO " + NOMBRE_TABLA + " (Tipo,Fecha,Lote) VALUES (?, ? ,?);";
 	private final String DELETE = "DELETE from " + NOMBRE_TABLA + " where ID= ?;";
 	private final String GETALL = "SELECT ID, Fecha, Tipo, Lote FROM " + NOMBRE_TABLA + ";";
-
+	
+	private static final Logger logger = Logger.getLogger(VencimientoDaoImpl.class.getName());
+	
+	
 	public VencimientoDaoImpl(Connection conn) {
 		this.conn = conn;
 	}
@@ -35,23 +41,21 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			}
 
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			logError(e);
 			System.exit(0);
 		} finally {
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logError(e);
 				}
 			}
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logError(e);
 				}
 			}
 		}
@@ -73,14 +77,13 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			stmt.setString(3, ven.getLote());
 			stmt.executeUpdate();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			logError(e);
 			System.exit(0);
 		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logError(e);
 			}
 		}
 		System.out.println("Datos cargados satisfactoriamente");
@@ -96,15 +99,14 @@ public class VencimientoDaoImpl implements VencimientoDao {
 			stmt.executeUpdate();
 
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			logError(e);
 			System.exit(0);
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logError(e);
 				}
 			}
 
@@ -119,6 +121,10 @@ public class VencimientoDaoImpl implements VencimientoDao {
 		int id = rs.getInt("ID");
 
 		return new Vencimiento(fecha, tipo, lote, id);
+	}
+	
+	private static void logError(Exception e) {
+		logger.log(Level.SEVERE, e.getClass().getName() + ": " + e.getMessage(), e);
 	}
 
 }

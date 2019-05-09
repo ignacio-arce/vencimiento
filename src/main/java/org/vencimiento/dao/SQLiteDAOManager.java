@@ -17,8 +17,7 @@ public class SQLiteDAOManager implements DAOManager {
 			Class.forName(DRIVER);
 			conn = getConnection();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -35,13 +34,13 @@ public class SQLiteDAOManager implements DAOManager {
 		try {
 			Class.forName(DRIVER);
 		} catch (ClassNotFoundException e) {
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 		try {
 			dbConnection = DriverManager.getConnection(DBURL);
 			return dbConnection;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 		return dbConnection;
 	}
