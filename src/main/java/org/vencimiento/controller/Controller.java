@@ -7,6 +7,7 @@ import java.awt.event.FocusListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -24,8 +25,8 @@ import ui.View;
  */
 public class Controller extends TimerTask {
 
-	private final View view;
-	private final VencimientoDao vencimientoDao;
+	private View view;
+	private VencimientoDao vencimientoDao;
 	private int cuantosHayVencidos = 0;
 
 	protected Controller(VencimientoDao vencimientoDao, View view) {
@@ -35,15 +36,18 @@ public class Controller extends TimerTask {
 
 	protected void init() {
 		view.agregarListenersMenu(new MainMenuListener());
+		
 		view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 		view.agregarListenersTextoFecha(new TextoFechaListener());
 		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
+		
 	}
 
 	@Override
 	public void run() {
 		if (view.isSystemTraySupported()) {
 			view.agregarListenersNotificacion(new IconoNotificacionListener());
+			
 			notificarVencimientos();
 		} else {
 			view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -174,15 +178,15 @@ public class Controller extends TimerTask {
 	/*
 	 * Carga los datos a la tabla
 	 */
-	public void cargarDatosEnTabla(ArrayList<Vencimiento> listaVencimientos) {
+	public void cargarDatosEnTabla(List<Vencimiento> list) {
 		// Reinicia el table model
 		view.getTableModel().setRowCount(0);
 
 		// Ordenar por vencimiento próximo
-		Collections.sort(listaVencimientos);
+		Collections.sort(list);
 
 		// Agrega los vencimientos a la tabla
-		for (Vencimiento v : listaVencimientos) {
+		for (Vencimiento v : list) {
 			String estado = isExpired(v.getFechaVencimiento());
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(), estado };
 			view.getTableModel().addRow(data);

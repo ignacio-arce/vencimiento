@@ -14,20 +14,21 @@ public class Vencimiento implements Serializable, Comparable<Vencimiento> {
 	private String lote;
 	private int id;
 
-	public Vencimiento(String fechaVencimiento[], String tipo, String lote) {
-		this.fechaVencimiento = toLocalDate(fechaVencimiento);
-		this.tipo = tipo;
-		this.lote = lote;
-	}
 
 	public Vencimiento(LocalDate fechaVencimiento, String tipo, String lote) {
 		this.fechaVencimiento = fechaVencimiento;
 		this.tipo = tipo;
 		this.lote = lote;
 	}
-
-	public Vencimiento(String fechaVencimiento[], String tipo, String lote, int id) {
+	
+	public Vencimiento(String fechaVencimiento[], String tipo, String lote) {
 		this.fechaVencimiento = toLocalDate(fechaVencimiento);
+		this.tipo = tipo;
+		this.lote = lote;
+	}
+
+	public Vencimiento(LocalDate fechaVencimiento, String tipo, String lote, int id) {
+		this.fechaVencimiento = fechaVencimiento;
 		this.tipo = tipo;
 		this.lote = lote;
 		this.id = id;
