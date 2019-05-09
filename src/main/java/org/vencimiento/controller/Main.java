@@ -3,10 +3,6 @@ package controller;
 import javax.swing.SwingUtilities;
 
 import dao.SQLiteDAOManager;
-import dao.VencimientoDao;
-import dao.VencimientoDaoImpl;
-
-import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
