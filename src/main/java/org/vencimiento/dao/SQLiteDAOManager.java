@@ -44,5 +44,6 @@ public class SQLiteDAOManager implements DAOManager {
 		}
 		return dbConnection;
 	}
+	
 
 }

@@ -52,7 +52,7 @@ public class View extends JFrame {
 	private JTextField anio;
 	private JTextField lote;
 	private JTextField tipo;
-	private final Notificacion iconoNotificacion = new Notificacion();
+	private final Notificacion iconoNotificacion = (java.awt.SystemTray.isSupported()) ? new Notificacion() : null;
 
 	/**
 	 * Initialise the JFrame containing the various JSwing components responsible of
@@ -224,8 +224,5 @@ public class View extends JFrame {
 		return iconoNotificacion;
 	}
 	
-	public boolean isSystemTraySupported() {
-		return Notificacion.isSystemTraySupported();
-	}
 
 }

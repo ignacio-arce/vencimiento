@@ -47,13 +47,11 @@ public class Controller extends TimerTask {
 
 	@Override
 	public void run() {
-		if (view.isSystemTraySupported()) {
+		if (view.getIconoNotificacion() != null) {
 			view.agregarListenersNotificacion(new IconoNotificacionListener());
-
 			notificarVencimientos();
 		} else {
 			view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			cancel();
 		}
 	}
 
@@ -203,7 +201,8 @@ public class Controller extends TimerTask {
 	private String isExpired(LocalDate fechaVencimiento, int diasAntes) {
 		if (LocalDate.now().isAfter(fechaVencimiento)) { // (fechaVencimiento, +inf)
 			return "Vencido";
-		} else if (LocalDate.now().isAfter(fechaVencimiento.minusDays(diasAntes))) { // (fechaVencimiento-diasAntes, +inf)
+		} else if (LocalDate.now().isAfter(fechaVencimiento.minusDays(diasAntes))) { // (fechaVencimiento-diasAntes,
+																						// +inf)
 			return "Proximo a vencer";
 		} else {
 			return "En fecha";
@@ -215,7 +214,7 @@ public class Controller extends TimerTask {
 	 * Notifica items vencidos
 	 */
 	private void notificarVencimientos() {
-		if (cuantosHayVencidos > 0) {
+		if (cuantosHayVencidos > 0 && view.getIconoNotificacion() != null) {
 			view.getIconoNotificacion().mostrarNotificacion("Hay " + cuantosHayVencidos + " items vencidos", "Aviso",
 					TrayIcon.MessageType.WARNING);
 		}
