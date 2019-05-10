@@ -16,7 +16,10 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.VencimientoDao;
 import java.awt.TrayIcon;
+import java.io.IOException;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Vencimiento;
 import ui.View;
 
@@ -26,6 +29,7 @@ import ui.View;
 public class Controller extends TimerTask {
 
 	private static final int CHECK_DAYS_AFTER_EXPIRY = 15;
+        private static final String CLIENTE = "BioEliga";
 
 	private View view;
 	private VencimientoDao vencimientoDao;
@@ -154,6 +158,17 @@ public class Controller extends TimerTask {
 				}
 
 				break;
+                        case "Autor":
+                        {
+                            
+                            JOptionPane.showMessageDialog(null, "<html>Creado por <a href=\"http://github.com/acerNacho\">Ignacio Arce</a> para " + CLIENTE + "</html>");
+                            try {
+                                Runtime.getRuntime().exec(String.format("cmd.exe /c start http://github.com/acerNacho"));
+                            } catch (IOException ex) {
+                                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+                        }
 			default:
 				System.out.println("Error desconocido");
 				break;
