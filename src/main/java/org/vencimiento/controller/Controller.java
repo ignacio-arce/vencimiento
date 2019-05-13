@@ -29,7 +29,7 @@ import ui.View;
 public class Controller extends TimerTask {
 
 	private static final int CHECK_DAYS_AFTER_EXPIRY = 15;
-        private static final String CLIENTE = "BioEliga";
+	private static final String CLIENTE = "BioEliga";
 
 	private View view;
 	private VencimientoDao vencimientoDao;
@@ -141,11 +141,11 @@ public class Controller extends TimerTask {
 				}
 				break;
 			case "Buscar":
-				String cadenaBuscada = JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar");
+				String cadenaBuscada = JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar").toLowerCase();
 				ArrayList<Vencimiento> vencimientosCoincidentes = new ArrayList<>();
 
 				vencimientoDao.getListaVencimientos().forEach(v -> {
-					if (v.getTipo().contains(cadenaBuscada) || v.getLote().contains(cadenaBuscada)) {
+					if (v.getTipo().toLowerCase().contains(cadenaBuscada) || v.getLote().toLowerCase().contains(cadenaBuscada)) {
 						vencimientosCoincidentes.add(v);
 					}
 				});
@@ -158,17 +158,21 @@ public class Controller extends TimerTask {
 				}
 
 				break;
-                        case "Autor":
-                        {
-                            
-                            JOptionPane.showMessageDialog(null, "<html>Creado por <a href=\"http://github.com/acerNacho\">Ignacio Arce</a> para " + CLIENTE + "</html>");
-                            try {
-                                Runtime.getRuntime().exec(String.format("cmd.exe /c start http://github.com/acerNacho"));
-                            } catch (IOException ex) {
-                                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            break;
-                        }
+			case "Autor": {
+
+				JOptionPane.showMessageDialog(null,
+						"<html>Creado por <a href=\"http://github.com/acerNacho\">Ignacio Arce</a> para " + CLIENTE
+								+ "</html>");
+				if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+					try {
+						Runtime.getRuntime().exec(String.format("cmd.exe /c start http://github.com/acerNacho"));
+
+					} catch (IOException ex) {
+						Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+				break;
+			}
 			default:
 				System.out.println("Error desconocido");
 				break;

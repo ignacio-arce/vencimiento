@@ -42,7 +42,7 @@ public class View extends JFrame {
 	private final JMenuItem menuOpcionesAgregar = new JMenuItem("Agregar");
 	private final JMenuItem menuOpcionesQuitar = new JMenuItem("Quitar");
 	private final JMenuItem menuOpcionesBuscar = new JMenuItem("Buscar");
-        private final JMenuItem menuAcercaDeAutor = new JMenuItem("Autor");
+	private final JMenuItem menuAcercaDeAutor = new JMenuItem("Autor");
 	private final JButton botonCargar = new JButton("Cargar datos");
 	private DefaultTableModel tableModel;
 	private JTable table;
@@ -88,10 +88,10 @@ public class View extends JFrame {
 		menuOpciones.add(menuOpcionesAgregar);
 		menuOpciones.add(menuOpcionesQuitar);
 		menuOpciones.add(menuOpcionesBuscar);
-                
-                // Menu Acerca de
-                menuAcercaDe.add(menuAcercaDeAutor);
-                
+
+		// Menu Acerca de
+		menuAcercaDe.add(menuAcercaDeAutor);
+
 		menu.add(menuOpciones);
 		menu.add(menuAcercaDe);
 		cp.add(menu, BorderLayout.NORTH);
@@ -182,7 +182,7 @@ public class View extends JFrame {
 		menuOpcionesAgregar.addActionListener(action);
 		menuOpcionesQuitar.addActionListener(action);
 		menuOpcionesBuscar.addActionListener(action);
-                menuAcercaDeAutor.addActionListener(action);
+		menuAcercaDeAutor.addActionListener(action);
 	}
 
 	/*
@@ -229,6 +229,5 @@ public class View extends JFrame {
 	public Notificacion getIconoNotificacion() {
 		return iconoNotificacion;
 	}
-	
 
 }
