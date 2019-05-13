@@ -1,12 +1,13 @@
 package dao;
 
-import java.util.ArrayList;
+
+import java.util.List;
 
 import model.Vencimiento;
 
 public interface VencimientoDao {
 
-	public ArrayList<Vencimiento> getListaVencimientos();
+	public List<Vencimiento> getListaVencimientos();
 
 	public Vencimiento getVencimiento(int n);
 

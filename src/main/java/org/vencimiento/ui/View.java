@@ -42,6 +42,7 @@ public class View extends JFrame {
 	private final JMenuItem menuOpcionesAgregar = new JMenuItem("Agregar");
 	private final JMenuItem menuOpcionesQuitar = new JMenuItem("Quitar");
 	private final JMenuItem menuOpcionesBuscar = new JMenuItem("Buscar");
+        private final JMenuItem menuAcercaDeAutor = new JMenuItem("Autor");
 	private final JButton botonCargar = new JButton("Cargar datos");
 	private DefaultTableModel tableModel;
 	private JTable table;
@@ -52,7 +53,7 @@ public class View extends JFrame {
 	private JTextField anio;
 	private JTextField lote;
 	private JTextField tipo;
-	private final Notificacion iconoNotificacion = new Notificacion();
+	private final Notificacion iconoNotificacion = (java.awt.SystemTray.isSupported()) ? new Notificacion() : null;
 
 	/**
 	 * Initialise the JFrame containing the various JSwing components responsible of
@@ -64,7 +65,7 @@ public class View extends JFrame {
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setTitle("Vencimiento");
 		setLocationRelativeTo(null);
-		setSize(400, 200);
+		setSize(600, 200);
 	}
 
 	/**
@@ -87,6 +88,10 @@ public class View extends JFrame {
 		menuOpciones.add(menuOpcionesAgregar);
 		menuOpciones.add(menuOpcionesQuitar);
 		menuOpciones.add(menuOpcionesBuscar);
+                
+                // Menu Acerca de
+                menuAcercaDe.add(menuAcercaDeAutor);
+                
 		menu.add(menuOpciones);
 		menu.add(menuAcercaDe);
 		cp.add(menu, BorderLayout.NORTH);
@@ -177,6 +182,7 @@ public class View extends JFrame {
 		menuOpcionesAgregar.addActionListener(action);
 		menuOpcionesQuitar.addActionListener(action);
 		menuOpcionesBuscar.addActionListener(action);
+                menuAcercaDeAutor.addActionListener(action);
 	}
 
 	/*
@@ -224,8 +230,5 @@ public class View extends JFrame {
 		return iconoNotificacion;
 	}
 	
-	public boolean isSystemTraySupported() {
-		return Notificacion.isSystemTraySupported();
-	}
 
 }

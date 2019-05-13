@@ -1,110 +1,130 @@
 package dao;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.Vencimiento;
 
 public class VencimientoDaoImpl implements VencimientoDao {
 
-	private static ArrayList<Vencimiento> listaVencimientos;
-	private Connection c = null;
-	private Statement stmt = null;
+	private Connection conn = null;
+	
 	private static final String NOMBRE_TABLA = "VENCIMIENTO";
-	private static final String DRIVER = "org.sqlite.JDBC";
-	private static final String DBURL = "jdbc:sqlite:data.db";
-
-	public VencimientoDaoImpl() {
-
+	private final String INSERT = "INSERT INTO " + NOMBRE_TABLA + " (Tipo,Fecha,Lote) VALUES (?, ? ,?);";
+	private final String DELETE = "DELETE from " + NOMBRE_TABLA + " where ID= ?;";
+	private final String GETALL = "SELECT ID, Fecha, Tipo, Lote FROM " + NOMBRE_TABLA + ";";
+	
+	private static final Logger logger = Logger.getLogger(VencimientoDaoImpl.class.getName());
+	
+	
+	public VencimientoDaoImpl(Connection conn) {
+		this.conn = conn;
 	}
 
 	@Override
-	public ArrayList<Vencimiento> getListaVencimientos() {
+	public List<Vencimiento> getListaVencimientos() {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<Vencimiento> listaVencimientos = new ArrayList<>();
+
 		try {
-			String sql = "";
 
-			if (!new java.io.File(DBURL.split(":")[2]).exists()) {
-				sql = "CREATE TABLE " + NOMBRE_TABLA + " " + "(ID INTEGER PRIMARY KEY AUTOINCREMENT    NOT NULL,"
-						+ " Tipo           TEXT    NOT NULL, " + " Fecha           TEXT     NOT NULL, "
-						+ " Lote           TEXT)";
-			}
-			Class.forName(DRIVER);
-			c = DriverManager.getConnection(DBURL);
+			stmt = conn.prepareStatement(GETALL);
+			rs = stmt.executeQuery();
 
-			stmt = c.createStatement();
-			if (!sql.equals("")) {
-				stmt.executeUpdate(sql);
-			}
-			c.setAutoCommit(false);
-			ResultSet rs = stmt.executeQuery("SELECT * FROM " + NOMBRE_TABLA + ";");
-
-			listaVencimientos = new ArrayList<Vencimiento>();
 			while (rs.next()) {
-				String tipo = rs.getString("Tipo");
-				String lote = rs.getString("Lote");
-				int id = rs.getInt("ID");
-				listaVencimientos.add(new Vencimiento(rs.getString("Fecha").split("-"), tipo, lote, id));
+				listaVencimientos.add(convertir(rs));
 			}
-
-			rs.close();
-			stmt.close();
-			c.close();
-			return listaVencimientos;
 
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			logError(e);
 			System.exit(0);
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					logError(e);
+				}
+			}
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					logError(e);
+				}
+			}
 		}
-		return null;
+		return listaVencimientos;
 	}
 
 	@Override
 	public Vencimiento getVencimiento(int n) {
-		return listaVencimientos.get(n);
+		return null;
 	}
 
 	@Override
 	public void guardarVencimientos(Vencimiento ven) {
+		PreparedStatement stmt = null;
 		try {
-			Class.forName(DRIVER);
-			c = DriverManager.getConnection(DBURL);
-			c.setAutoCommit(false);
-			stmt = c.createStatement();
-
-			String sql = "INSERT INTO " + NOMBRE_TABLA + " (Fecha,Tipo,Lote) " + "VALUES ( '"
-					+ ven.getFechaVencimiento() + "', '" + ven.getTipo() + "' ,'" + ven.getLote() + "');";
-			stmt.executeUpdate(sql);
-			ResultSet rs = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='" + NOMBRE_TABLA + "';");
-			ven.setId(rs.getInt("seq"));
-			rs.close();
-			stmt.close();
-			c.commit();
-			c.close();
+			stmt = conn.prepareStatement(INSERT);
+			stmt.setString(1, ven.getTipo());
+			stmt.setString(2, ven.getFechaVencimiento().toString());
+			stmt.setString(3, ven.getLote());
+			stmt.executeUpdate();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			logError(e);
 			System.exit(0);
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				logError(e);
+			}
 		}
 		System.out.println("Datos cargados satisfactoriamente");
 	}
 
 	@Override
-	public void borrarVencimiento(Vencimiento vencimiento) {
+	public void borrarVencimiento(Vencimiento ven) {
+		PreparedStatement stmt = null;
 		try {
-			Class.forName(DRIVER);
-			c = DriverManager.getConnection(DBURL);
-			c.setAutoCommit(false);
-			stmt = c.createStatement();
 
-			String sql = "DELETE from " + NOMBRE_TABLA + " where ID='" + vencimiento.getId() + "';";
-			stmt.executeUpdate(sql);
-			c.commit();
-			stmt.close();
-			c.close();
+			stmt = conn.prepareStatement(DELETE);
+			stmt.setInt(1, ven.getId());
+			stmt.executeUpdate();
+
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			logError(e);
 			System.exit(0);
+		} finally {
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					logError(e);
+				}
+			}
+
 		}
 		System.out.println("Vencimiento borrado satisfactoriamente");
+	}
+
+	private Vencimiento convertir(ResultSet rs) throws SQLException {
+		String tipo = rs.getString("Tipo");
+		String lote = rs.getString("Lote");
+		java.time.LocalDate fecha = LocalDate.parse(rs.getString("Fecha"));
+		int id = rs.getInt("ID");
+
+		return new Vencimiento(fecha, tipo, lote, id);
+	}
+	
+	private static void logError(Exception e) {
+		logger.log(Level.SEVERE, e.getClass().getName() + ": " + e.getMessage(), e);
 	}
 
 }

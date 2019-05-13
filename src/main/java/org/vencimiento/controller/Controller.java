@@ -7,6 +7,7 @@ import java.awt.event.FocusListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -15,7 +16,10 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.VencimientoDao;
 import java.awt.TrayIcon;
+import java.io.IOException;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Vencimiento;
 import ui.View;
 
@@ -24,8 +28,11 @@ import ui.View;
  */
 public class Controller extends TimerTask {
 
-	private final View view;
-	private final VencimientoDao vencimientoDao;
+	private static final int CHECK_DAYS_AFTER_EXPIRY = 15;
+        private static final String CLIENTE = "BioEliga";
+
+	private View view;
+	private VencimientoDao vencimientoDao;
 	private int cuantosHayVencidos = 0;
 
 	protected Controller(VencimientoDao vencimientoDao, View view) {
@@ -38,16 +45,16 @@ public class Controller extends TimerTask {
 		view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 		view.agregarListenersTextoFecha(new TextoFechaListener());
 		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
+
 	}
 
 	@Override
 	public void run() {
-		if (view.isSystemTraySupported()) {
+		if (view.getIconoNotificacion() != null) {
 			view.agregarListenersNotificacion(new IconoNotificacionListener());
 			notificarVencimientos();
 		} else {
 			view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			cancel();
 		}
 	}
 
@@ -151,6 +158,17 @@ public class Controller extends TimerTask {
 				}
 
 				break;
+                        case "Autor":
+                        {
+                            
+                            JOptionPane.showMessageDialog(null, "<html>Creado por <a href=\"http://github.com/acerNacho\">Ignacio Arce</a> para " + CLIENTE + "</html>");
+                            try {
+                                Runtime.getRuntime().exec(String.format("cmd.exe /c start http://github.com/acerNacho"));
+                            } catch (IOException ex) {
+                                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+                        }
 			default:
 				System.out.println("Error desconocido");
 				break;
@@ -174,16 +192,16 @@ public class Controller extends TimerTask {
 	/*
 	 * Carga los datos a la tabla
 	 */
-	public void cargarDatosEnTabla(ArrayList<Vencimiento> listaVencimientos) {
+	public void cargarDatosEnTabla(List<Vencimiento> list) {
 		// Reinicia el table model
 		view.getTableModel().setRowCount(0);
 
 		// Ordenar por vencimiento próximo
-		Collections.sort(listaVencimientos);
+		Collections.sort(list);
 
 		// Agrega los vencimientos a la tabla
-		for (Vencimiento v : listaVencimientos) {
-			String estado = isExpired(v.getFechaVencimiento());
+		for (Vencimiento v : list) {
+			String estado = isExpired(v.getFechaVencimiento(), CHECK_DAYS_AFTER_EXPIRY);
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(), estado };
 			view.getTableModel().addRow(data);
 			cuantosHayVencidos = (estado.equals("Vencido")) ? cuantosHayVencidos + 1 : cuantosHayVencidos;
@@ -194,17 +212,23 @@ public class Controller extends TimerTask {
 	/**
 	 * Controla si los items estan vencidos
 	 */
-	private String isExpired(LocalDate fechaVencimiento) {
-		if (fechaVencimiento.isBefore(LocalDate.now())) {
+	private String isExpired(LocalDate fechaVencimiento, int diasAntes) {
+		if (LocalDate.now().isAfter(fechaVencimiento)) { // (fechaVencimiento, +inf)
 			return "Vencido";
+		} else if (LocalDate.now().isAfter(fechaVencimiento.minusDays(diasAntes))) { // (fechaVencimiento-diasAntes,
+																						// +inf)
+			return "Proximo a vencer";
 		} else {
 			return "En fecha";
 		}
 
 	}
 
+	/*
+	 * Notifica items vencidos
+	 */
 	private void notificarVencimientos() {
-		if (cuantosHayVencidos > 0) {
+		if (cuantosHayVencidos > 0 && view.getIconoNotificacion() != null) {
 			view.getIconoNotificacion().mostrarNotificacion("Hay " + cuantosHayVencidos + " items vencidos", "Aviso",
 					TrayIcon.MessageType.WARNING);
 		}

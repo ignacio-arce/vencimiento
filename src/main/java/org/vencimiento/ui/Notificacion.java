@@ -13,34 +13,30 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 /**
  *
  * @author lavoratoriov
  */
 public class Notificacion {
 	private static TrayIcon tryIcon;
-	private static final boolean SystemTraySupported = SystemTray.isSupported();
 	private static final Image img = java.awt.Toolkit.getDefaultToolkit().getImage("images/166.gif");
 	private PopupMenu menu;
 	private MenuItem menuItemSalir;
 	private MenuItem menuItemAbrir;
 
-	public Notificacion() {
-		if (Notificacion.SystemTraySupported) {
-			crearMenuNotificacion();
-			menu.add(menuItemSalir);
-			menu.add(menuItemAbrir);
-			tryIcon = new TrayIcon(img, "Vencimiento app", menu);
-			tryIcon.setImageAutoSize(true);
-			
-			try {
-				SystemTray.getSystemTray().add(tryIcon);
-				Thread.sleep(1000);
-			} catch (AWTException | InterruptedException ex) {
-				Logger.getLogger(Notificacion.class.getName()).log(Level.SEVERE, null, ex);
-			}
+	protected Notificacion() {
+		crearMenuNotificacion();
+		menu.add(menuItemSalir);
+		menu.add(menuItemAbrir);
+		tryIcon = new TrayIcon(img, "Vencimiento app", menu);
+		tryIcon.setImageAutoSize(true);
+
+		try {
+			SystemTray.getSystemTray().add(tryIcon);
+			Thread.sleep(1000);
+		} catch (InterruptedException | AWTException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
 
@@ -75,10 +71,6 @@ public class Notificacion {
 			break;
 		}
 		tryIcon.displayMessage(caption, message, t);
-	}
-	
-	public static boolean isSystemTraySupported() {
-		return SystemTraySupported;
 	}
 
 }
