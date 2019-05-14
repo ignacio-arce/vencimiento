@@ -170,9 +170,6 @@ public class Controller extends TimerTask {
 				}
 				break;
 			}
-			case "Volver": {
-				view.changePanel("scrollPane");
-			}
 			default:
 				System.out.println("Error desconocido");
 				break;
