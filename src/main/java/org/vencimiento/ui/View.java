@@ -62,7 +62,7 @@ public class View extends JFrame {
 	public View() {
 		crearGUI();
 
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation((iconoNotificacion != null) ? JFrame.HIDE_ON_CLOSE : JFrame.EXIT_ON_CLOSE);
 		setTitle("Vencimiento");
 		setLocationRelativeTo(null);
 		setSize(600, 200);
@@ -101,7 +101,7 @@ public class View extends JFrame {
 
 		//// Segundo Panel: Agregar Vencimiento
 
-		Container contenedorPanelVencimiento = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 15));
+		Container contenedorPanelVencimiento = new JPanel(new FlowLayout(FlowLayout.LEADING, -35, 15));
 		JPanel panelAgregarVencimiento = new JPanel();
 		panelAgregarVencimiento.setLayout(new GridLayout(4, 2, 5, 9));
 
@@ -129,8 +129,12 @@ public class View extends JFrame {
 		tipo = new JTextField(10);
 		panelAgregarVencimiento.add(tipo);
 
-		// Panel vacio
-		panelAgregarVencimiento.add(new JPanel());
+		// Panel volver
+		JPanel panelBotonVolver = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+		JButton volver = new JButton("<<");
+		panelBotonVolver.add(volver);
+		volver.addActionListener(e -> changePanel("scrollPane"));
+		panelAgregarVencimiento.add(panelBotonVolver);
 
 		// Boton cargar datos
 		panelAgregarVencimiento.add(botonCargar);
@@ -151,9 +155,10 @@ public class View extends JFrame {
 	public void changePanel(String panel) {
 		if (menu.isVisible() && panel.equals("panelVencimiento")) {
 			menu.setVisible(false);
-
+			setSize(300,200);
 		} else {
 			menu.setVisible(true);
+			setSize(600, 200);
 		}
 		CardLayout cl = (CardLayout) (panelDeContenido.getLayout());
 		cl.show(panelDeContenido, panel);

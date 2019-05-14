@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -53,8 +52,6 @@ public class Controller extends TimerTask {
 		if (view.getIconoNotificacion() != null) {
 			view.agregarListenersNotificacion(new IconoNotificacionListener());
 			notificarVencimientos();
-		} else {
-			view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 	}
 
@@ -172,6 +169,9 @@ public class Controller extends TimerTask {
 					}
 				}
 				break;
+			}
+			case "Volver": {
+				view.changePanel("scrollPane");
 			}
 			default:
 				System.out.println("Error desconocido");
