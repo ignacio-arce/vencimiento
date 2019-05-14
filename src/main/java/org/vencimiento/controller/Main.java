@@ -17,9 +17,8 @@ public class Main {
                     
                     View view = new View();
                     Controller controller = new Controller(sqlManager.getVencimientoDao(), view);
-                    
-                    view.setVisible(true);
                     controller.init();
+                    view.setVisible(true);
                     if (java.awt.SystemTray.isSupported()) {
                         final ScheduledExecutorService t = Executors.newSingleThreadScheduledExecutor();
                         t.scheduleAtFixedRate(controller, 0, 8, TimeUnit.HOURS);
