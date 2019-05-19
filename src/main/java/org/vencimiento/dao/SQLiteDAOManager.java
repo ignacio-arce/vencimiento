@@ -24,7 +24,7 @@ public class SQLiteDAOManager implements DAOManager {
 	@Override
 	public VencimientoDao getVencimientoDao() {
 		if (this.vencimientoDao == null) {
-			this.vencimientoDao = new VencimientoDaoImpl(conn);
+			this.vencimientoDao = new SQLiteVencimientoDao(conn);
 		}
 		return this.vencimientoDao;
 	}

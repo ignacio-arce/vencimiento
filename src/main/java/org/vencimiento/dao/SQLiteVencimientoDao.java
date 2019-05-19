@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import model.Vencimiento;
 
-public class VencimientoDaoImpl implements VencimientoDao {
+public class SQLiteVencimientoDao implements VencimientoDao {
 
 	private Connection conn = null;
 	
@@ -18,10 +18,10 @@ public class VencimientoDaoImpl implements VencimientoDao {
 	private final String DELETE = "DELETE from " + NOMBRE_TABLA + " where ID= ?;";
 	private final String GETALL = "SELECT ID, Fecha, Tipo, Lote FROM " + NOMBRE_TABLA + ";";
 	
-	private static final Logger logger = Logger.getLogger(VencimientoDaoImpl.class.getName());
+	private static final Logger logger = Logger.getLogger(SQLiteVencimientoDao.class.getName());
 	
 	
-	public VencimientoDaoImpl(Connection conn) {
+	public SQLiteVencimientoDao(Connection conn) {
 		this.conn = conn;
 	}
 
