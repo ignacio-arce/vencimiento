@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -117,7 +116,7 @@ public class SQLiteVencimientoDao implements VencimientoDao {
 	private Vencimiento convertir(ResultSet rs) throws SQLException {
 		String tipo = rs.getString("Tipo");
 		String lote = rs.getString("Lote");
-		java.time.LocalDate fecha = LocalDate.parse(rs.getString("Fecha"));
+		java.time.LocalDate fecha = java.time.LocalDate.parse(rs.getString("Fecha"));
 		int id = rs.getInt("ID");
 
 		return new Vencimiento(fecha, tipo, lote, id);
