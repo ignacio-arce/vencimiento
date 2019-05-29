@@ -14,4 +14,6 @@ public interface VencimientoDao {
 	public void guardarVencimientos(Vencimiento vencimiento);
 
 	public void borrarVencimiento(Vencimiento vencimiento);
+	
+	public void actualizarVencimiento(Vencimiento vencimiento);
 }

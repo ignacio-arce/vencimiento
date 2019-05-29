@@ -14,8 +14,10 @@ public class SQLiteVencimientoDao implements VencimientoDao {
 	
 	private static final String NOMBRE_TABLA = "VENCIMIENTO";
 	private final String INSERT = "INSERT INTO " + NOMBRE_TABLA + " (Tipo,Fecha,Lote) VALUES (?, ? ,?);";
+	private final String UPDATE = "UPDATE " + NOMBRE_TABLA + " SET Tipo = ?, Fecha = ?, Lote = ? WHERE ID = ? ";
 	private final String DELETE = "DELETE from " + NOMBRE_TABLA + " where ID= ?;";
-	private final String GETALL = "SELECT ID, Fecha, Tipo, Lote FROM " + NOMBRE_TABLA + ";";
+	private final String GETALL = "SELECT ID, Fecha, Tipo, Lote FROM " + NOMBRE_TABLA;
+	private final String GETONE = GETALL + "WHERE ID = ?";
 	
 	private static final Logger logger = Logger.getLogger(SQLiteVencimientoDao.class.getName());
 	
@@ -63,7 +65,38 @@ public class SQLiteVencimientoDao implements VencimientoDao {
 
 	@Override
 	public Vencimiento getVencimiento(int n) {
-		return null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Vencimiento vencimiento = null;
+
+		try {
+
+			stmt = conn.prepareStatement(GETONE);
+			stmt.setInt(1, n);
+			rs = stmt.executeQuery();
+
+			vencimiento=(convertir(rs));
+
+		} catch (Exception e) {
+			logError(e);
+			System.exit(0);
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					logError(e);
+				}
+			}
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					logError(e);
+				}
+			}
+		}
+		return vencimiento;
 	}
 
 	@Override
@@ -124,6 +157,30 @@ public class SQLiteVencimientoDao implements VencimientoDao {
 	
 	private static void logError(Exception e) {
 		logger.log(Level.SEVERE, e.getClass().getName() + ": " + e.getMessage(), e);
+	}
+
+	@Override
+	public void actualizarVencimiento(Vencimiento ven) {
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(UPDATE);
+			stmt.setString(1, ven.getTipo());
+			stmt.setString(2, ven.getFechaVencimiento().toString());
+			stmt.setString(3, ven.getLote());
+			stmt.setInt(4, ven.getId());
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			logError(e);
+			System.exit(0);
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				logError(e);
+			}
+		}
+		System.out.println("Datos actualizados satisfactoriamente");
 	}
 
 }
