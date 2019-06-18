@@ -44,7 +44,7 @@ public class Controller extends TimerTask {
 		view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 		view.agregarListenersTextoFecha(new TextoFechaListener());
 		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
-
+		
 	}
 
 	@Override

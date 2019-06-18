@@ -18,8 +18,9 @@ public class Main {
                     View view = new View();
                     Controller controller = new Controller(sqlManager.getVencimientoDao(), view);
                     controller.init();
+                    
                     view.setVisible(true);
-                    if (java.awt.SystemTray.isSupported()) {
+                    if (java.awt.SystemTray.isSupported() && !System.getProperty("os.name").equalsIgnoreCase("linux")) {
                         final ScheduledExecutorService t = Executors.newSingleThreadScheduledExecutor();
                         t.scheduleAtFixedRate(controller, 0, 8, TimeUnit.HOURS);
                     }
