@@ -12,11 +12,13 @@ import ui.View;
 
 public class Main {
 	public static void main(String args[]) {
+		SQLiteDAOManager sqlManager = new SQLiteDAOManager();
+		View view = new View();
+        Controller controller = new Controller(sqlManager.getVencimientoDao(), view);
 		SwingUtilities.invokeLater(() -> {
-                    SQLiteDAOManager sqlManager = new SQLiteDAOManager();
                     
-                    View view = new View();
-                    Controller controller = new Controller(sqlManager.getVencimientoDao(), view);
+                    
+                    
                     controller.init();
                     
                     view.setVisible(true);

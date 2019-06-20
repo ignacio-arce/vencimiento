@@ -20,6 +20,7 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Vencimiento;
+import model.VencimientoTableModel;
 import ui.View;
 
 /**
@@ -33,18 +34,20 @@ public class Controller extends TimerTask {
 	private View view;
 	private VencimientoDao vencimientoDao;
 	private int cuantosHayVencidos = 0;
+	private VencimientoTableModel vtoTableModel;
 
 	protected Controller(VencimientoDao vencimientoDao, View view) {
 		this.view = view;
 		this.vencimientoDao = vencimientoDao;
+		this.vtoTableModel = new VencimientoTableModel(vencimientoDao);
+		this.vtoTableModel.updateModel();
+		this.view.setTableModel(vtoTableModel);
 	}
 
 	protected void init() {
 		view.agregarListenersMenu(new MainMenuListener());
 		view.agregarListenersPanelAgregarVencimiento(new BotonCargarDatosListener());
 		view.agregarListenersTextoFecha(new TextoFechaListener());
-		cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
-		
 	}
 
 	@Override
@@ -118,7 +121,7 @@ public class Controller extends TimerTask {
 							0) == 0) { // Si
 						int filasElegidas[] = view.getTable().getSelectedRows();
 						for (int i = 0; i < filasElegidas.length; i++) {
-							Object o[] = armarFilaElegida(view.getTableModel(), filasElegidas[i]);
+							Object o[] = armarFilaElegida(vtoTableModel, filasElegidas[i]);
 
 							Vencimiento vencimientoElegido = new Vencimiento(((String) o[1]).split("-"), (String) o[0],
 									(String) o[2]);
@@ -176,7 +179,7 @@ public class Controller extends TimerTask {
 			}
 		}
 
-		private Object[] armarFilaElegida(DefaultTableModel t, int filaElegida) {
+		private Object[] armarFilaElegida(VencimientoTableModel t, int filaElegida) {
 			Object[] o = new String[t.getColumnCount() - 1]; // -1 avoid the status of expiry date
 			for (int j = 0; j < t.getRowCount(); j++) {
 				for (int i = 0; i < t.getColumnCount() - 1; i++) {
@@ -195,7 +198,7 @@ public class Controller extends TimerTask {
 	 */
 	public void cargarDatosEnTabla(List<Vencimiento> list) {
 		// Reinicia el table model
-		view.getTableModel().setRowCount(0);
+		//view.getTableModel().setRowCount(0);
 
 		// Ordenar por vencimiento próximo
 		Collections.sort(list);
@@ -204,7 +207,7 @@ public class Controller extends TimerTask {
 		for (Vencimiento v : list) {
 			String estado = isExpired(v.getFechaVencimiento(), CHECK_DAYS_AFTER_EXPIRY);
 			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(), estado };
-			view.getTableModel().addRow(data);
+			vtoTableModel.addRow(data);
 			cuantosHayVencidos = (estado.equals("Vencido")) ? cuantosHayVencidos + 1 : cuantosHayVencidos;
 		}
 
