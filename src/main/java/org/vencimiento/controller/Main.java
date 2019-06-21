@@ -3,6 +3,7 @@ package controller;
 import javax.swing.SwingUtilities;
 
 import dao.SQLiteDAOManager;
+import model.VencimientoTableModel;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -13,7 +14,9 @@ import ui.View;
 public class Main {
 	public static void main(String args[]) {
 		SQLiteDAOManager sqlManager = new SQLiteDAOManager();
-		View view = new View();
+		VencimientoTableModel vtoTableModel = new VencimientoTableModel(sqlManager.getVencimientoDao());
+		vtoTableModel.updateModel();
+		View view = new View(vtoTableModel);
         Controller controller = new Controller(sqlManager.getVencimientoDao(), view);
 		SwingUtilities.invokeLater(() -> {
                     

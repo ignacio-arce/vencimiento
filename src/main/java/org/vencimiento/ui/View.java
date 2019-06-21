@@ -23,7 +23,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
 
 import model.VencimientoTableModel;
 
@@ -61,7 +60,9 @@ public class View extends JFrame {
 	 * Initialise the JFrame containing the various JSwing components responsible of
 	 * the Vencimiento System.
 	 */
-	public View() {
+	public View(VencimientoTableModel vtoTableModel) {
+		this.vtoTableModel = vtoTableModel;
+		this.vtoTableModel.updateModel();
 		crearGUI();
 
 		setDefaultCloseOperation((iconoNotificacion != null) ? JFrame.HIDE_ON_CLOSE : JFrame.EXIT_ON_CLOSE);
@@ -79,7 +80,10 @@ public class View extends JFrame {
 		cp.setLayout(new BorderLayout());
 
 		//// Primer panel: Tabla
-
+		// Tabla & Modelo de tabla
+		table = new JTable(vtoTableModel);
+		table.setRowSelectionAllowed(true);
+		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		
 
 		// Menu de Opciones
@@ -201,17 +205,7 @@ public class View extends JFrame {
 		return table;
 	}
 
-	/*public DefaultTableModel getTableModel() {
-		return tableModel;
-	}*/
 	
-	public void setTableModel(VencimientoTableModel vtoTableModel) {
-		this.vtoTableModel = vtoTableModel;
-		// Tabla & Modelo de tabla
-		table = new JTable(vtoTableModel);
-		table.setRowSelectionAllowed(true);
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-	}
 
 	public LocalDate getFecha() {
 		try {

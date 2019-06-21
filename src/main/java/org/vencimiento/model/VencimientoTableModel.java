@@ -14,7 +14,7 @@ public class VencimientoTableModel extends AbstractTableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final String[] COLUMN_NAMES = { "Insumo", "Fecha vto.", "Lote", "Estado" };
+	private final String[] COLUMN_NAMES = { "Insumo", "Fecha vto.", "Lote", "Estado"};
 	private VencimientoDao vencimientoDao;
 
 	private List<Vencimiento> listaVencimientos = new ArrayList<>();
@@ -24,7 +24,8 @@ public class VencimientoTableModel extends AbstractTableModel {
 	}
 
 	public void updateModel() {
-		listaVencimientos = vencimientoDao.getListaVencimientos();
+		this.listaVencimientos = vencimientoDao.getListaVencimientos();
+		printDebugData();
 	}
 
 	@Override
@@ -34,17 +35,17 @@ public class VencimientoTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return listaVencimientos.size();
-	}
-
-	@Override
-	public int getRowCount() {
 		return COLUMN_NAMES.length;
 	}
 
 	@Override
-	public Object getValueAt(int col, int rows) {
-		Vencimiento elegido = listaVencimientos.get(rows);
+	public int getRowCount() {
+		return listaVencimientos.size();
+	}
+
+	@Override
+	public Object getValueAt(int col, int row) {
+		Vencimiento elegido = listaVencimientos.get(row);
 		switch (col) {
 		case 0:
 			return elegido.getTipo();
@@ -58,6 +59,21 @@ public class VencimientoTableModel extends AbstractTableModel {
 			return "";
 		}
 	}
+	
+	private void printDebugData() {
+	      int numRows = getRowCount();
+	      int numCols = getColumnCount();
+	      
+	      for (int i = 0; i < numCols; i++) {
+	        System.out.print("    columna " + i + ":");
+	        System.out.println();
+	        for (int j = 0; j < numRows; j++) {
+	        	System.out.println(getValueAt(i,j));
+	        }
+	        System.out.println();
+	      }
+	      System.out.println("--------------------------");
+	    }
 
 	private String isExpired(LocalDate fechaVencimiento, int diasAntes) {
 		if (LocalDate.now().isAfter(fechaVencimiento)) { // (fechaVencimiento, +inf)

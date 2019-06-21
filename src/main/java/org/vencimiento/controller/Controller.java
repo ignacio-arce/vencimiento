@@ -4,14 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 import dao.VencimientoDao;
 import java.awt.TrayIcon;
@@ -34,14 +29,10 @@ public class Controller extends TimerTask {
 	private View view;
 	private VencimientoDao vencimientoDao;
 	private int cuantosHayVencidos = 0;
-	private VencimientoTableModel vtoTableModel;
 
 	protected Controller(VencimientoDao vencimientoDao, View view) {
 		this.view = view;
 		this.vencimientoDao = vencimientoDao;
-		this.vtoTableModel = new VencimientoTableModel(vencimientoDao);
-		this.vtoTableModel.updateModel();
-		this.view.setTableModel(vtoTableModel);
 	}
 
 	protected void init() {
@@ -83,7 +74,6 @@ public class Controller extends TimerTask {
 			if (view.getFecha() != null) {
 				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 				vencimientoDao.guardarVencimientos(vencimiento);
-				cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
 				view.changePanel("scrollPane");
 			}
 
@@ -116,47 +106,10 @@ public class Controller extends TimerTask {
 				view.changePanel("panelVencimiento");
 				break;
 			case "Quitar":
-				if (view.getTable().getSelectedRow() > -1) {
-					if (JOptionPane.showConfirmDialog(view, "Confirmacion", "Desea borrar el item seleccionado?",
-							0) == 0) { // Si
-						int filasElegidas[] = view.getTable().getSelectedRows();
-						for (int i = 0; i < filasElegidas.length; i++) {
-							Object o[] = armarFilaElegida(vtoTableModel, filasElegidas[i]);
-
-							Vencimiento vencimientoElegido = new Vencimiento(((String) o[1]).split("-"), (String) o[0],
-									(String) o[2]);
-
-							for (Vencimiento v : vencimientoDao.getListaVencimientos()) {
-								if (vencimientoElegido.compareTo(v) == 0) {
-									vencimientoDao.borrarVencimiento(v);
-									break;
-								}
-							}
-						}
-
-						cargarDatosEnTabla(vencimientoDao.getListaVencimientos());
-					}
-				} else {
-					JOptionPane.showMessageDialog(view, "No se han seleccionado items", "Error", 0);
-				}
+				
 				break;
 			case "Buscar":
-				String cadenaBuscada = JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar").toLowerCase();
-				ArrayList<Vencimiento> vencimientosCoincidentes = new ArrayList<>();
-
-				vencimientoDao.getListaVencimientos().forEach(v -> {
-					if (v.getTipo().toLowerCase().contains(cadenaBuscada) || v.getLote().toLowerCase().contains(cadenaBuscada)) {
-						vencimientosCoincidentes.add(v);
-					}
-				});
-
-				if (!vencimientosCoincidentes.isEmpty()) {
-					cargarDatosEnTabla(vencimientosCoincidentes);
-				} else {
-					JOptionPane.showMessageDialog(null,
-							"No se han encontrado coincidencias para \"" + cadenaBuscada + "\"", "Buscador", 0);
-				}
-
+				
 				break;
 			case "Autor": {
 
@@ -177,53 +130,6 @@ public class Controller extends TimerTask {
 				System.out.println("Error desconocido");
 				break;
 			}
-		}
-
-		private Object[] armarFilaElegida(VencimientoTableModel t, int filaElegida) {
-			Object[] o = new String[t.getColumnCount() - 1]; // -1 avoid the status of expiry date
-			for (int j = 0; j < t.getRowCount(); j++) {
-				for (int i = 0; i < t.getColumnCount() - 1; i++) {
-					if (j == filaElegida) {
-						o[i] = t.getValueAt(j, i);
-					}
-				}
-			}
-			return o;
-		}
-
-	}
-
-	/*
-	 * Carga los datos a la tabla
-	 */
-	public void cargarDatosEnTabla(List<Vencimiento> list) {
-		// Reinicia el table model
-		//view.getTableModel().setRowCount(0);
-
-		// Ordenar por vencimiento próximo
-		Collections.sort(list);
-
-		// Agrega los vencimientos a la tabla
-		for (Vencimiento v : list) {
-			String estado = isExpired(v.getFechaVencimiento(), CHECK_DAYS_AFTER_EXPIRY);
-			Object data[] = { v.getTipo(), v.getFechaVencimiento().toString(), v.getLote(), estado };
-			vtoTableModel.addRow(data);
-			cuantosHayVencidos = (estado.equals("Vencido")) ? cuantosHayVencidos + 1 : cuantosHayVencidos;
-		}
-
-	}
-
-	/**
-	 * Controla si los items estan vencidos
-	 */
-	private String isExpired(LocalDate fechaVencimiento, int diasAntes) {
-		if (LocalDate.now().isAfter(fechaVencimiento)) { // (fechaVencimiento, +inf)
-			return "Vencido";
-		} else if (LocalDate.now().isAfter(fechaVencimiento.minusDays(diasAntes))) { // (fechaVencimiento-diasAntes,
-																						// +inf)
-			return "Proximo a vencer";
-		} else {
-			return "En fecha";
 		}
 
 	}
