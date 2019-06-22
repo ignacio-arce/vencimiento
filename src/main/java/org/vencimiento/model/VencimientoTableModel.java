@@ -25,12 +25,13 @@ public class VencimientoTableModel extends AbstractTableModel {
 
 	public void updateModel() {
 		this.listaVencimientos = vencimientoDao.getListaVencimientos();
-		printDebugData();
 	}
+
+	
 
 	@Override
 	public String getColumnName(int i) {
-		return (i > COLUMN_NAMES.length || i < 0) ? "" : COLUMN_NAMES[i];
+		return COLUMN_NAMES[i];
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class VencimientoTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public Object getValueAt(int col, int row) {
+	public Object getValueAt(int row, int col) {
 		Vencimiento elegido = listaVencimientos.get(row);
 		switch (col) {
 		case 0:
@@ -68,7 +69,7 @@ public class VencimientoTableModel extends AbstractTableModel {
 	        System.out.print("    columna " + i + ":");
 	        System.out.println();
 	        for (int j = 0; j < numRows; j++) {
-	        	System.out.println(getValueAt(i,j));
+	        	System.out.println(getValueAt(j,i));
 	        }
 	        System.out.println();
 	      }

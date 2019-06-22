@@ -15,7 +15,7 @@ public class SQLiteVencimientoDao implements VencimientoDao {
 	private static final String NOMBRE_TABLA = "VENCIMIENTO";
 	private final String INSERT = "INSERT INTO " + NOMBRE_TABLA + " (Tipo,Fecha,Lote) VALUES (?, ? ,?);";
 	private final String UPDATE = "UPDATE " + NOMBRE_TABLA + " SET Tipo = ?, Fecha = ?, Lote = ? WHERE ID = ? ";
-	private final String DELETE = "DELETE from " + NOMBRE_TABLA + " where ID= ?;";
+	private final String DELETE = "DELETE from " + NOMBRE_TABLA + " where ID = ?;";
 	private final String GETALL = "SELECT ID, Fecha, Tipo, Lote FROM " + NOMBRE_TABLA;
 	private final String GETONE = GETALL + "WHERE ID = ?";
 	
@@ -146,19 +146,7 @@ public class SQLiteVencimientoDao implements VencimientoDao {
 		System.out.println("Vencimiento borrado satisfactoriamente");
 	}
 
-	private Vencimiento convertir(ResultSet rs) throws SQLException {
-		String tipo = rs.getString("Tipo");
-		String lote = rs.getString("Lote");
-		java.time.LocalDate fecha = java.time.LocalDate.parse(rs.getString("Fecha"));
-		int id = rs.getInt("ID");
-
-		return new Vencimiento(fecha, tipo, lote, id);
-	}
 	
-	private static void logError(Exception e) {
-		logger.log(Level.SEVERE, e.getClass().getName() + ": " + e.getMessage(), e);
-	}
-
 	@Override
 	public void actualizarVencimiento(Vencimiento ven) {
 
@@ -182,5 +170,20 @@ public class SQLiteVencimientoDao implements VencimientoDao {
 		}
 		System.out.println("Datos actualizados satisfactoriamente");
 	}
+	
+	private Vencimiento convertir(ResultSet rs) throws SQLException {
+		String tipo = rs.getString("Tipo");
+		String lote = rs.getString("Lote");
+		java.time.LocalDate fecha = java.time.LocalDate.parse(rs.getString("Fecha"));
+		int id = rs.getInt("ID");
+
+		return new Vencimiento(fecha, tipo, lote, id);
+	}
+	
+	private static void logError(Exception e) {
+		logger.log(Level.SEVERE, e.getClass().getName() + ": " + e.getMessage(), e);
+	}
+
+	
 
 }

@@ -75,6 +75,7 @@ public class Controller extends TimerTask {
 				Vencimiento vencimiento = new Vencimiento(view.getFecha(), view.getTipo(), view.getLote());
 				vencimientoDao.guardarVencimientos(vencimiento);
 				view.changePanel("scrollPane");
+				view.getTableModel().updateModel();
 			}
 
 		}
@@ -104,9 +105,17 @@ public class Controller extends TimerTask {
 			switch (e.getActionCommand()) {
 			case "Agregar":
 				view.changePanel("panelVencimiento");
+				
 				break;
 			case "Quitar":
-				
+				java.util.List<Vencimiento> listaVencimientos = vencimientoDao.getListaVencimientos();
+				int filasElegidas[] = (view.getTable().getSelectedRows().length <= listaVencimientos.size()) ? view.getTable().getSelectedRows() : null;
+				for (int i = filasElegidas.length-1; i>=0; i--) { // TODO mejorar esto de arriba
+					vencimientoDao.borrarVencimiento(vencimientoDao.getListaVencimientos().get(filasElegidas[i]));
+				}
+				view.getTableModel().updateModel();
+				view.getTable().clearSelection();
+				view.repaint();
 				break;
 			case "Buscar":
 				

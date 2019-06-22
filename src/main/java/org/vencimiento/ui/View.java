@@ -135,7 +135,10 @@ public class View extends JFrame {
 		JPanel panelBotonVolver = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
 		JButton volver = new JButton("<<");
 		panelBotonVolver.add(volver);
-		volver.addActionListener(e -> changePanel("scrollPane"));
+		volver.addActionListener(e -> {
+		changePanel("scrollPane");
+		getTableModel().updateModel();
+		repaint();});
 		panelAgregarVencimiento.add(panelBotonVolver);
 
 		// Boton cargar datos
@@ -205,7 +208,9 @@ public class View extends JFrame {
 		return table;
 	}
 
-	
+	public VencimientoTableModel getTableModel() {
+		return vtoTableModel;
+	}
 
 	public LocalDate getFecha() {
 		try {
