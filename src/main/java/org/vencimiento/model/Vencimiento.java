@@ -9,6 +9,7 @@ public class Vencimiento implements Serializable, Comparable<Vencimiento> {
 	 *  
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final int CHECK_DAYS_AFTER_EXPIRY = 15;
 	private LocalDate fechaVencimiento;
 	private String tipo;
 	private String lote;
@@ -86,6 +87,18 @@ public class Vencimiento implements Serializable, Comparable<Vencimiento> {
 			return -1;
 		} else {
 			return 1;
+		}
+
+	}
+	
+	protected String isExpired(LocalDate fechaVencimiento) {
+		if (LocalDate.now().isAfter(fechaVencimiento)) { // (fechaVencimiento, +inf)
+			return "Vencido";
+		} else if (LocalDate.now().isAfter(fechaVencimiento.minusDays(CHECK_DAYS_AFTER_EXPIRY))) { // (fechaVencimiento-diasAntes,
+																						// +inf)
+			return "Proximo a vencer";
+		} else {
+			return "En fecha";
 		}
 
 	}

@@ -15,7 +15,6 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Vencimiento;
-import model.VencimientoTableModel;
 import ui.View;
 
 /**
@@ -23,7 +22,7 @@ import ui.View;
  */
 public class Controller extends TimerTask {
 
-	private static final int CHECK_DAYS_AFTER_EXPIRY = 15;
+
 	private static final String CLIENTE = "BioEliga";
 
 	private View view;
@@ -108,9 +107,8 @@ public class Controller extends TimerTask {
 				
 				break;
 			case "Quitar":
-				java.util.List<Vencimiento> listaVencimientos = vencimientoDao.getListaVencimientos();
-				int filasElegidas[] = (view.getTable().getSelectedRows().length <= listaVencimientos.size()) ? view.getTable().getSelectedRows() : null;
-				for (int i = filasElegidas.length-1; i>=0; i--) { // TODO mejorar esto de arriba
+				int filasElegidas[] = view.getTable().getSelectedRows();
+				for (int i = filasElegidas.length-1; i>=0; i--) { 
 					vencimientoDao.borrarVencimiento(vencimientoDao.getListaVencimientos().get(filasElegidas[i]));
 				}
 				view.getTableModel().updateModel();
@@ -118,6 +116,19 @@ public class Controller extends TimerTask {
 				view.repaint();
 				break;
 			case "Buscar":
+				String cadenaBuscada = JOptionPane.showInputDialog("Introduzca el lote/tipo de insumo a buscar").toLowerCase();
+				java.util.List<Vencimiento> listaVencimientos = vencimientoDao.getListaVencimientos();
+				for (Vencimiento v : listaVencimientos) {
+					if (v.getLote().toLowerCase().contains(cadenaBuscada) || v.getTipo().toLowerCase().contains(cadenaBuscada)) {
+						view.getTable().addRowSelectionInterval(listaVencimientos.indexOf(v), listaVencimientos.indexOf(v));
+					}
+				}
+				
+				if (view.getTable().getSelectedRowCount() == 0) { // si no hay filas seleccionadas
+					JOptionPane.showMessageDialog(null,
+							"No se han encontrado coincidencias para \"" + cadenaBuscada + "\"", "Buscador", 0);
+				}
+				
 				
 				break;
 			case "Autor": {

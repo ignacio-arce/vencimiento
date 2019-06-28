@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +27,9 @@ public class VencimientoTableModel extends AbstractTableModel {
 		this.listaVencimientos = vencimientoDao.getListaVencimientos();
 	}
 
+	public void updateModel(List<Vencimiento> listaVencimientos) {
+		this.listaVencimientos = listaVencimientos;
+	}
 	
 
 	@Override
@@ -55,12 +58,12 @@ public class VencimientoTableModel extends AbstractTableModel {
 		case 2:
 			return elegido.getLote();
 		case 3:
-			return isExpired(elegido.getFechaVencimiento(), 15); // TODO : cambiar los 15 dias!!!!!!!!!!!!!!!!!!
+			return elegido.isExpired(elegido.getFechaVencimiento()); // TODO : cambiar los 15 dias!!!!!!!!!!!!!!!!!!
 		default:
 			return "";
 		}
 	}
-	
+	/*
 	private void printDebugData() {
 	      int numRows = getRowCount();
 	      int numCols = getColumnCount();
@@ -74,18 +77,9 @@ public class VencimientoTableModel extends AbstractTableModel {
 	        System.out.println();
 	      }
 	      System.out.println("--------------------------");
-	    }
+	    }*/
 
-	private String isExpired(LocalDate fechaVencimiento, int diasAntes) {
-		if (LocalDate.now().isAfter(fechaVencimiento)) { // (fechaVencimiento, +inf)
-			return "Vencido";
-		} else if (LocalDate.now().isAfter(fechaVencimiento.minusDays(diasAntes))) { // (fechaVencimiento-diasAntes,
-																						// +inf)
-			return "Proximo a vencer";
-		} else {
-			return "En fecha";
-		}
 
-	}
+	
 
 }
